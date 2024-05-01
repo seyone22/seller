@@ -1,4 +1,3 @@
-// GET all items
 import {deleteItem, getAllItems, insertItem} from "@/app/services/item.service";
 import { NextResponse } from "next/server";
 
