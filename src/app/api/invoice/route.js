@@ -1,5 +1,5 @@
 // POST an invoice to the database
-import {cancelInvoice, createInvoiceAndDeductInventory, getAllInvoices} from "@/app/services/invoice.service";
+import {cancelInvoice, createInvoiceAndDeductInventory, getAllInvoices} from "@/app/services/server/invoice.service";
 import { NextResponse } from "next/server";
 
 export async function GET(req, res) {

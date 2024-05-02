@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "ag-grid-enterprise": "^31.3.1",
+    "ag-grid-react": "^31.3.1",
     "mongoose": "^8.3.3",
     "next": "14.2.3",
     "react": "^18",
+    "react-bootstrap": "^2.10.2",
     "react-dom": "^18"
   },
   "devDependencies": {

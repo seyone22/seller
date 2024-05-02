@@ -1,4 +1,4 @@
-import Item from '../models/item';
+import Item from '../../models/item';
 import dbConnect from "@/app/utils/dbConnect";
 
 export const getItemById = async (itemId) => {

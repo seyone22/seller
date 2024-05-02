@@ -1,7 +1,7 @@
 // models/invoice.js
-const mongoose = require('mongoose');
+import {model, models, Schema} from "mongoose";
 
-const invoiceSchema = new mongoose.Schema({
+const invoiceSchema = new Schema({
     invoiceNumber: { type: String, required: true },
     date: { type: Date, required: true },
     dueDate: { type: Date, required: true },
@@ -13,7 +13,7 @@ const invoiceSchema = new mongoose.Schema({
         phone: { type: String }
     },
     items: [{
-        _id: { type: mongoose.Schema.Types.ObjectId, auto: true, },
+        _id: { type: Schema.Types.ObjectId, auto: true, },
         name: { type: String, required: true },
         description: { type: String },
         price: { type: Number, required: true },
@@ -33,4 +33,7 @@ const invoiceSchema = new mongoose.Schema({
     status: { type: String, enum: ['sent', 'paid', 'pending'], required: true }
 });
 
-module.exports = mongoose.model('Invoice', invoiceSchema);
+const Invoice = models.Invoice || model('Invoice', invoiceSchema);
+Invoice.schema.set('collection', 'invoices');
+
+export default Invoice;
