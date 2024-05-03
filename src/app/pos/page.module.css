@@ -1,0 +1,81 @@
+.flexRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.sized {
+    width: 70vw;
+    overflow: scroll;
+    height: 94vh;
+}
+
+.smallSized {
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+    margin: 24px;
+}
+.invoiceItemsList {
+    height: 72vh;
+    overflow: scroll;
+}
+
+.invoiceItemsTotalArea {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+}
+
+.payableValue {
+    width: 50%;
+    text-align: end;
+    padding-right: 4px;
+    font-style: italic;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.payableText {
+
+}
+
+.actionArea {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.actionArea * {
+    margin-left: 8px;
+    margin-top: 8px;
+}
+
+.preorderArea {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.discountArea {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: end;
+}
+
+.inputArea {
+    width: 200px !important;
+}
+
+.toast {
+    position: absolute;
+    left: 40%;
+    top: 80%
+}
+
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.customerInput {
+    margin-left: 8px;
+    margin-top: 8px;
+}

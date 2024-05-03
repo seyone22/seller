@@ -1,0 +1,32 @@
+.invoiceItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+.invoiceItemDescription {
+    width: 50%;
+}
+
+.invoiceItemTitle {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.invoiceItemSubtitle {
+    color: darkgray;
+    font-size: 12px;
+}
+
+.invoiceItemQuantity {
+    font-size: 24px;
+    text-align: left;
+}
+
+.invoiceItemPrice {
+    font-size: 18px;
+    width: 40%;
+    text-align: right;
+    font-style: italic;
+    padding-right: 4px;
+}

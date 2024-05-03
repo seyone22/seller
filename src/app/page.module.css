@@ -228,3 +228,23 @@
     transform: rotate(0deg);
   }
 }
+
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mainButton {
+  width: 150px;
+  margin-bottom: 24px;
+}
+
+.sized {
+  width: 100vw;
+  height: 100vh;
+}

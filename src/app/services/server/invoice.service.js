@@ -8,17 +8,24 @@ export const createInvoiceAndDeductInventory = async (invoiceData) => {
         await dbConnect();
 
         console.log(invoiceData);
+        // Check for invoice validity
+        if (invoiceData.items.length === 0) {
+            throw new Error('The invoice is empty');
+        }
+
         // Check stock and deduct inventory
-        for (const item of invoiceData.items) {
-            const existingItem = await Item.findById(item._id).exec();
-            if (!existingItem) {
-                throw new Error(`Item with ID ${item._id} not found`);
+        if (invoiceData.goodsStatus !== 'preorder') {
+            for (const item of invoiceData.items) {
+                const existingItem = await Item.findById(item._id).exec();
+                if (!existingItem) {
+                    throw new Error(`Item with ID ${item._id} not found`);
+                }
+                if ((existingItem.quantity < item.quantity)) {
+                    throw new Error(`Not enough stock for item with ID ${item._id}`);
+                }
+                existingItem.quantity -= item.quantity;
+                await existingItem.save();
             }
-            if (existingItem.quantity < item.quantity) {
-                throw new Error(`Not enough stock for item with ID ${item._id}`);
-            }
-            existingItem.quantity -= item.quantity;
-            await existingItem.save();
         }
 
         // Create invoice
@@ -86,7 +93,7 @@ export const updateInvoiceAndInventory = async (invoiceId, updatedInvoiceData) =
         await dbConnect();
 
         // Find the existing invoice and update it
-        const updatedInvoice = await Invoice.findByIdAndUpdate(invoiceId, updatedInvoiceData, { new: true });
+        const updatedInvoice = await Invoice.findByIdAndUpdate(invoiceId, updatedInvoiceData, {new: true});
         if (!updatedInvoice) {
             throw new Error(`Invoice with ID ${invoiceId} not found`);
         }

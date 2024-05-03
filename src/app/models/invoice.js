@@ -28,9 +28,10 @@ const invoiceSchema = new Schema({
     tax: { type: Number },
     total: { type: Number, required: true },
     currency: { type: String, required: true },
-    paymentMethod: { type: String, enum: ['cash', 'card', 'online'], required: true },
+    paymentMethod: { type: String, enum: ['cash', 'card', 'online', 'bank transfer'], required: true },
     paymentInstructions: { type: String },
-    status: { type: String, enum: ['sent', 'paid', 'pending'], required: true }
+    status: { type: String, enum: ['sent', 'paid', 'pending'], required: true },
+    goodsStatus: { type: String, enum: ['delivered', 'preorder', 'pending'], required: true }
 });
 
 const Invoice = models.Invoice || model('Invoice', invoiceSchema);

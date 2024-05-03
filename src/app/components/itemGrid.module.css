@@ -1,0 +1,19 @@
+.gridContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.gridItem {
+    display: flex;
+    width: 130px;
+    height: 130px;
+    border: darkgray 2px solid;
+    border-radius: 12px;
+    margin: 12px;
+    padding: 8px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}

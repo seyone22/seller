@@ -14,26 +14,23 @@ export async function fetchItemsFromAPI(endpoint = 'item') {
 
 export async function pushInvoiceToAPI(data) {
     try {
-        fetch('/api/invoice', {
+        const response = await fetch('/api/invoice', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to post invoice data');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Invoice data posted successfully:', data);
-            })
-            .catch(error => {
-                console.error('Error posting invoice data:', error);
-            });
-    } catch (e) {
-        console.log(e)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to post invoice data');
+        }
+
+        const responseData = await response.json();
+        console.log('Invoice data posted successfully:', responseData);
+        return responseData; // Return the response data
+    } catch (error) {
+        console.error('Error posting invoice data:', error);
+        throw error; // Rethrow the error to be caught by the caller
     }
 }
