@@ -12,9 +12,9 @@ export async function fetchItemsFromAPI(endpoint = 'item') {
     }
 }
 
-export async function pushInvoiceToAPI(data) {
+export async function pushInvoiceToAPI(data,endpoint = 'invoice') {
     try {
-        const response = await fetch('/api/invoice', {
+        const response = await fetch(`/api/${endpoint}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,5 +32,27 @@ export async function pushInvoiceToAPI(data) {
     } catch (error) {
         console.error('Error posting invoice data:', error);
         throw error; // Rethrow the error to be caught by the caller
+    }
+}
+
+export async function fetchStatisticsFromAPI(period = 'all', endpoint = 'sales/statistics') {
+    try {
+        const response = await fetch(`/api/${endpoint}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error fetching data from server');
+        }
+
+        const responseData = await response.json();
+        console.log(responseData);
+        return responseData['data'];
+    } catch (error) {
+        console.error(`Error: ${error}`);
+        throw error;
     }
 }

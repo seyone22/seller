@@ -1,0 +1,19 @@
+.statRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.statCard {
+    margin: 24px;
+    min-width: 180px;
+}
+
+.statValue {
+    font-size: 32px;
+    line-height: 32px;
+}
+
+.statSubtitle {
+    color: black;
+    font-style: italic;
+}

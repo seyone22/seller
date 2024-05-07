@@ -3,7 +3,7 @@ import styles from './itemGrid.module.css'
 import {useEffect, useState} from "react";
 import {fetchItemsFromAPI} from "@/app/services/client/invoice.service";
 
-const ItemGrid = ({onItemClick, onItemContext}) => {
+const ItemGrid = ({onItemClick, onItemContext, purchase}) => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
@@ -12,8 +12,11 @@ const ItemGrid = ({onItemClick, onItemContext}) => {
         });
     }, []);
 
-    const handleItemClick = (item) => {
-        onItemClick(item);
+    const handleItemClick = (item, event) => {
+        event.preventDefault();
+        if (item.quantity - (purchase.some(p => p._id === item._id) ? purchase.find(p => p._id === item._id).quantity : 0)) {
+            onItemClick(item);
+        }
     }
     const handleItemContext = (itemId, event) => {
         event.preventDefault();
@@ -23,9 +26,12 @@ const ItemGrid = ({onItemClick, onItemContext}) => {
     return (
         <div className={styles.gridContainer}>
             {items.map(item => (
-                <div key={item._id} className={styles.gridItem} onClick={() => handleItemClick(item)}
+                <div key={item._id} className={`${styles.gridItem} ${purchase.some(p => p._id === item._id) ? styles.gridItemSelected : ''}`} onClick={(event) => handleItemClick(item, event)}
                      onContextMenu={(event) => handleItemContext(item._id, event)}>
                     <div>{item.name}</div>
+                    <div className={styles.alignRight}>
+                        <div>{item.quantity - (purchase.some(p => p._id === item._id) ? purchase.find(p => p._id === item._id).quantity : 0)}</div>
+                    </div>
                 </div>
             ))}
         </div>

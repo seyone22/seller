@@ -126,3 +126,38 @@ export const updateInvoiceAndInventory = async (invoiceId, updatedInvoiceData) =
         throw new Error('Failed to update invoice and inventory');
     }
 };
+
+export const getSalesStatistics = async () => {
+    try {
+        await dbConnect;
+
+        // Calculate sales statistics
+        const salesStats = await Invoice.aggregate([
+            {
+                $match: {
+                    'goodsStatus': 'delivered'
+                }
+            }, {
+                $group: {
+                    _id: 'null',
+                    salesDiscount: {
+                        $sum: '$discount.value'
+                    },
+                    salesGross: {
+                        $sum: '$total'
+                    },
+                    salesNet: {
+                        $sum: '$subtotal'
+                    },
+                    salesCount: {
+                        $count: {}
+                    }
+                }
+            }
+        ]);
+        const { salesGross, salesNet, salesCount, salesDiscount } = salesStats[0];
+        return { salesGross, salesNet, salesCount, salesDiscount };
+    } catch (error) {
+        throw new Error(`Error: ${error}`)
+    }
+}

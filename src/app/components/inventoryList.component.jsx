@@ -26,7 +26,7 @@ const InventoryList = () => {
             setColumnDefs([
                 {field: '_id', flex: 2},
                 {field: 'itemCode', flex: 2},
-                {field: 'description', flex: 3},
+                {field: 'name', flex: 3},
                 {field: 'price', flex: 1, valueFormatter: params => currencyFormatter(params.data.price, 'Rs.'), type: "rightAligned"},
                 {field: 'quantity', flex: 1},
             ]);

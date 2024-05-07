@@ -169,7 +169,7 @@ export default function Pos() {
                 </div>
                 <div className={styles.flexRow}>
                     <div className={styles.sized}>
-                        <ItemGrid onItemClick={handleItemClick} onItemContext={handleItemContext}/>
+                        <ItemGrid onItemClick={handleItemClick} onItemContext={handleItemContext} purchase={purchase}/>
                     </div>
                     <div className={styles.smallSized}>
                         <div className={styles.invoiceItemsList}>

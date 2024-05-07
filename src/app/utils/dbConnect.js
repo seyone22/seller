@@ -10,12 +10,16 @@ if (!MONGODB_URI) {
 export default async function dbConnect() {
     try {
         await mongoose.connect(MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+        }).then( mongoose => {
+                console.log('MongoDB connected successfully');
+                return mongoose;
+            }
+        ).catch(e =>{
+            console.log(`Error: ${e}`)
+            throw new Error(`Error: ${e}`)
         });
-        console.log('MongoDB connected successfully');
     } catch (error) {
         console.error('MongoDB connection error:', error);
-        throw new Error('Failed to connect to MongoDB');
+        throw new Error(`MongoDB Connection Error: ${error}`);
     }
 }
