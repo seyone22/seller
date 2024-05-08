@@ -135,7 +135,8 @@ export const getSalesStatistics = async () => {
         const salesStats = await Invoice.aggregate([
             {
                 $match: {
-                    'goodsStatus': 'delivered'
+                    'goodsStatus': 'delivered',
+                    'status': 'paid'
                 }
             }, {
                 $group: {
