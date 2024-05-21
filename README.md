@@ -9,6 +9,7 @@
     - [Installing Dependencies](#installing-dependencies)
     - [Running the Application](#running-the-application)
     - [Docker Setup](#docker-setup)
+    - [Environment Variables](#environment-variables)
 4. [Usage](#usage)
 5. [Contributing](#contributing)
 6. [License](#license)
@@ -73,6 +74,10 @@ Alternatively, you can use Docker to set up and run the application.
    ```
 
 3. Navigate to `http://localhost:3001` in your web browser.
+
+### Environment Variables
+
+In a production environment, set the MONGODB_URI environment variable on your server or hosting provider. For local development, use a .env.local file.
 
 ## Usage
 
