@@ -3,7 +3,7 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
-import {fetchItemsFromAPI, pushInvoiceToAPI} from "../services/client/invoice.service"
+import {fetchItemsFromAPI, pushInvoiceToAPI} from "@/services/client/invoice.service"
 import {Button, Toast} from "react-bootstrap";
 import styles from './inventoryList.module.css'
 

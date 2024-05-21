@@ -1,5 +1,5 @@
 import React from "react";
-import currencyFormatter from "@/app/utils/formatters";
+import currencyFormatter from "@/utils/formatters";
 import styles from "./purchaseItem.module.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 

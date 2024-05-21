@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {getSalesStatistics} from "@/app/services/server/invoice.service";
+import {getSalesStatistics} from "@/services/server/invoice.service";
 
 export async function GET(req, res) {
     if (req.method === 'GET') {

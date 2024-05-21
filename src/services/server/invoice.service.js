@@ -1,7 +1,7 @@
 // services/invoiceService.js
-import Invoice from '../../models/invoice';
-import Item from '../../models/item';
-import dbConnect from "@/app/utils/dbConnect";
+import Invoice from '@/models/invoice';
+import Item from '@/models/item';
+import dbConnect from "@/utils/dbConnect";
 
 export const createInvoiceAndDeductInventory = async (invoiceData) => {
     try {

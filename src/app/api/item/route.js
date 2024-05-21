@@ -1,4 +1,4 @@
-import {deleteItem, getAllItems, insertItem} from "@/app/services/server/item.service";
+import {deleteItem, getAllItems, insertItem} from "@/services/server/item.service";
 import { NextResponse } from "next/server";
 
 export async function GET(req, res) {

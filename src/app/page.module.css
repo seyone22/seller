@@ -4,7 +4,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 6rem;
-  min-height: 100vh;
 }
 
 .description {
@@ -231,8 +230,6 @@
 
 
 .container {
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -242,9 +239,4 @@
 .mainButton {
   width: 150px;
   margin-bottom: 24px;
-}
-
-.sized {
-  width: 100vw;
-  height: 100vh;
 }

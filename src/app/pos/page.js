@@ -2,11 +2,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from "./page.module.css";
 import {useCallback, useEffect, useState} from "react";
-import ItemGrid from "@/app/components/itemGrid.component";
-import currencyFormatter from "@/app/utils/formatters";
+import ItemGrid from "@/components/itemGrid.component";
+import currencyFormatter from "@/utils/formatters";
 import {Button, ButtonGroup, Dropdown, Form, InputGroup, Toast} from "react-bootstrap";
-import {pushInvoiceToAPI} from "@/app/services/client/invoice.service";
-import PurchaseItem from "@/app/components/purchaseItem.component";
+import {pushInvoiceToAPI} from "@/services/client/invoice.service";
+import PurchaseItem from "@/components/purchaseItem.component";
 
 export default function Pos() {
     const [purchase, setPurchase] = useState([]);

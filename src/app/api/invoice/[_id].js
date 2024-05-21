@@ -1,4 +1,4 @@
-import {getInvoice} from "@/app/services/server/invoice.service";
+import {getInvoice} from "@/services/server/invoice.service";
 import {NextResponse} from "next/server";
 
 export async function GET(req, res) {
