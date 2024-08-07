@@ -7,6 +7,7 @@ const itemSchema = new Schema({
     description: { type: String },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
+    active: { type: Boolean, default: false },
 });
 
 const Item = models.Item || model('Item', itemSchema);
