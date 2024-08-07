@@ -1,44 +1,46 @@
-import {deleteItem, getAllItems, insertItem} from "@/services/server/item.service";
+import { deleteItem, getAllItems, insertItem } from "@/services/server/item.service";
 import { NextResponse } from "next/server";
 
-export async function GET(req, res) {
-    if (req.method === 'GET') {
-        try {
-            const items = await getAllItems();
+export async function GET(req) {
+    try {
+        const items = await getAllItems();
+        const { searchParams } = new URL(req.url);
+        const type = searchParams.get('type');
+
+        if (type === "all") {
             return NextResponse.json({ success: true, data: items }, { status: 200 });
-        } catch (error) {
-            return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        } else if (type === "active") {
+            const filtered = items.filter(item => item.active === true);
+            return NextResponse.json({ success: true, data: filtered }, { status: 200 });
+        } else {
+            return NextResponse.json({ success: false, error: 'Invalid type parameter' }, { status: 400 });
         }
-    } else {
-        return NextResponse.json({ success: false, error: 'Method not allowed' }, { status: 405 });
+    } catch (error) {
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }
 
-// POST an item
-export async function POST(req, res) {
-    if (req.method === 'POST') {
-        try {
-            const newItem = await insertItem(req.json());
-            return NextResponse.json({ success: true, data: newItem }, { status: 201 });
-        } catch (error) {
-            return NextResponse.json({ success: false, error: error.message }, { status: 400 });
-        }
-    } else {
-        return NextResponse.json({ success: false, error: 'Method not allowed' }, { status: 405 });
+export async function POST(req) {
+    try {
+        const newItem = await insertItem(await req.json());
+        return NextResponse.json({ success: true, data: newItem }, { status: 201 });
+    } catch (error) {
+        return NextResponse.json({ success: false, error: error.message }, { status: 400 });
     }
 }
 
-// DELETE an item by itemId
-export async function DELETE(req, res) {
-    if (req.method === 'DELETE') {
-        try {
-            const { itemId } = req.query;
-            const deletedItem = await deleteItem(itemId);
-            return NextResponse.json({ success: true, data: deletedItem }, { status: 200 });
-        } catch (error) {
-            return NextResponse.json({ success: false, error: error.message }, { status: 404 });
+export async function DELETE(req) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const itemId = searchParams.get('itemId');
+
+        if (!itemId) {
+            return NextResponse.json({ success: false, error: 'Item ID is required' }, { status: 400 });
         }
-    } else {
-        return NextResponse.json({ success: false, error: 'Method not allowed' }, { status: 405 });
+
+        const deletedItem = await deleteItem(itemId);
+        return NextResponse.json({ success: true, data: deletedItem }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ success: false, error: error.message }, { status: 404 });
     }
 }
