@@ -60,6 +60,6 @@ export const insertItem = async (itemData) => {
         const newItem = new Item(itemData);
         return await newItem.save();
     } catch (error) {
-        throw new Error('Failed to insert item');
+        throw new Error(`${error}`);
     }
 };
