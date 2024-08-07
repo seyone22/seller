@@ -27,7 +27,7 @@ const InventoryList = ({ key, showActiveOnly }) => {
 
     return (
         <div className={styles.itemGridContainer}>
-            <div style={{ height: "98vh" }} className={"ag-theme-quartz"}>
+            <div style={{ height: "88vh" }} className={"ag-theme-quartz"}>
                 <AgGridReact
                     ref={gridRef}
                     rowData={rowData}
