@@ -27,5 +27,6 @@ COPY --from=builder /app/package.json ./package.json
 # Port on which Next.js will run
 EXPOSE 3000
 
+
 # Next.js starts with the command "next start"
 CMD ["npm", "start"]
