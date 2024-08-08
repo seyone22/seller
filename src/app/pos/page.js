@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import {useCallback, useEffect, useState} from "react";
 import ItemGrid from "@/components/itemGrid/itemGrid.component";
 import currencyFormatter from "@/utils/formatters";
-import {Button, ButtonGroup, Dropdown, Form, InputGroup, Toast} from "react-bootstrap";
+import {Button, Form, InputGroup, Toast} from "react-bootstrap";
 import {pushInvoiceToAPI} from "@/services/client/invoice.service";
 import PurchaseItem from "@/components/purchaseItem/purchaseItem.component";
 
@@ -12,10 +12,18 @@ export default function Pos() {
     const [purchase, setPurchase] = useState([]);
     const [purchaseTotal, setPurchaseTotal] = useState(0)
     const [goodsStatus, setGoodsStatus] = useState('delivered')
-    const [discount, setDiscount] = useState({type:'amount',value:0})
+    const [discount, setDiscount] = useState({type: 'amount', value: 0})
     const [paymentMethod, setPaymentMethod] = useState('cash')
+    const [cashTendered, setCashTendered] = useState(0)
+    const [activeButton, setActiveButton] = useState('amount');
 
-    const [customerInfo, setCustomerInfo] = useState({id:'POSCUST', name:'POSCUST',address:'',email:'',phone:''})
+    const [customerInfo, setCustomerInfo] = useState({
+        id: 'POSCUST',
+        name: 'POSCUST',
+        address: '',
+        email: '',
+        phone: ''
+    })
 
     const [apiMessage, setApiMessage] = useState(false);
     const [showToast, setShowToast] = useState(false);
@@ -134,7 +142,16 @@ export default function Pos() {
     }, [purchase, purchaseTotal, goodsStatus]);
 
     const handleDiscountChange = (event) => {
-        setDiscount({value: event.target.value, type: 'amount'})
+        setDiscount({...discount, value: event.target.value})
+    }
+
+    const handleDiscountTypeButtonClick = (type) => {
+        setActiveButton(type);
+        setDiscount({...discount, type});
+    };
+
+    const handleCashTendered = (event) => {
+        setCashTendered(event.target.value)
     }
 
     const handleSelect = (method) => {
@@ -142,8 +159,8 @@ export default function Pos() {
     };
 
     const handleCustomerData = (event) => {
-        const { name, value } = event.target;
-        setCustomerInfo({ ...customerInfo, [name]: value });
+        const {name, value} = event.target;
+        setCustomerInfo({...customerInfo, [name]: value});
 
         console.log(customerInfo)
     };
@@ -162,16 +179,18 @@ export default function Pos() {
                 <div className={styles.customerInput}>
                     <Form>
                         <Form.Group className={styles.flexRow} controlId="exampleForm.ControlInput1">
-                            <Form.Control value={customerInfo.name} onChange={handleCustomerData} type="text" name='name' placeholder="Customer Name" />
-                            <Form.Control value={customerInfo.phone} onChange={handleCustomerData} type="text" name='phone' placeholder="Telephone" />
+                            <Form.Control value={customerInfo.name} onChange={handleCustomerData} type="text"
+                                          name='name' placeholder="Customer Name"/>
+                            <Form.Control value={customerInfo.phone} onChange={handleCustomerData} type="text"
+                                          name='phone' placeholder="Telephone"/>
                         </Form.Group>
                     </Form>
                 </div>
                 <div className={styles.flexRow}>
-                    <div className={styles.sized}>
+                    <div className={styles.itemGrid}>
                         <ItemGrid onItemClick={handleItemClick} onItemContext={handleItemContext} purchase={purchase}/>
                     </div>
-                    <div className={styles.smallSized}>
+                    <div className={styles.sidebar}>
                         <div className={styles.invoiceItemsList}>
                             {purchase.map(item => (
                                 <PurchaseItem key={item._id} item={item} onContextMenu={handleItemContext}/>
@@ -180,8 +199,10 @@ export default function Pos() {
                         <div className={styles.discountArea}>
 
                             <InputGroup className={styles.inputArea}>
-                                <Button variant="outline-secondary">%</Button>
-                                <Button variant="outline-primary">#</Button>
+                                <Button variant={activeButton === 'percent' ? "primary" : "outline-secondary"}
+                                        onClick={() => handleDiscountTypeButtonClick('percent')}>%</Button>
+                                <Button variant={activeButton === 'amount' ? "primary" : "outline-secondary"}
+                                        onClick={() => handleDiscountTypeButtonClick('amount')}>#</Button>
                                 <Form.Control
                                     aria-label="Example text with two button addons"
                                     value={discount.value}
@@ -192,9 +213,28 @@ export default function Pos() {
                             <span>Discount: </span>
                         </div>
                         <div className={styles.invoiceItemsTotalArea}>
-                            <div className={styles.payableText}>Payable:</div>
-                            <div className={styles.payableValue}>{currencyFormatter(purchaseTotal - discount.value, 'Rs. ')}</div>
+                            <div className={styles.payableText}>Total:</div>
+                            <div
+                                className={styles.payableValue}>{currencyFormatter(purchaseTotal - discount.value, 'Rs. ')}</div>
                         </div>
+                        <div className={styles.discountArea}>
+                            <InputGroup className={styles.inputArea}>
+                                <Form.Control
+                                    aria-label="Example text with two button addons"
+                                    value={cashTendered}
+                                    onChange={handleCashTendered}
+                                    type={'number'}
+                                />
+                            </InputGroup>
+                            <span>Tendered: </span>
+                        </div>
+                        <div className={styles.invoiceItemsTotalArea}>
+                            <div className={styles.payableText}>Balance:</div>
+                            <div
+                                className={styles.payableValue}>{currencyFormatter(cashTendered - (purchaseTotal - discount.value), 'Rs. ')}</div>
+                        </div>
+
+
                         <div className={styles.preorderArea}>
                             <Form.Check
                                 type="checkbox"
@@ -206,8 +246,9 @@ export default function Pos() {
                         </div>
                         <div className={styles.actionArea}>
                             <Button variant={"outline-primary"} onClick={() => push_invoice()}>Push Invoice</Button>
-                            <Button variant={"outline-danger"} onClick={() => reset() }>Reset</Button>
-                            <Form.Select onChange={(e) => handleSelect(e.target.value)} size="sm" aria-label="Default select example" style={{width:150}}>
+                            <Button variant={"outline-danger"} onClick={() => reset()}>Reset</Button>
+                            <Form.Select onChange={(e) => handleSelect(e.target.value)} size="sm"
+                                         aria-label="Default select example" style={{width: 150}}>
                                 <option value="cash">Cash</option>
                                 <option value="card">Card</option>
                                 <option value="bank transfer">Bank Transfer</option>
