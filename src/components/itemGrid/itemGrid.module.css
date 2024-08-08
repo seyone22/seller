@@ -36,3 +36,8 @@
 .itemOut {
     border: red 2px solid !important;
 }
+
+.gridItemSubtitle {
+    font-size: 12px;
+    font-style: italic;
+}

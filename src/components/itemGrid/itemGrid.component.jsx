@@ -35,7 +35,8 @@ const ItemGrid = ({onItemClick, onItemContext, purchase}) => {
 
                      onClick={(event) => handleItemClick(item, event)}
                      onContextMenu={(event) => handleItemContext(item._id, event)}>
-                    <div>{item.name}</div>
+                    <div>{item.itemCode}</div>
+                    <div className={styles.gridItemSubtitle}>{item.name}</div>
                     <div className={styles.alignRight}>
                         <div>{item.quantity - (purchase.some(p => p._id === item._id) ? purchase.find(p => p._id === item._id).quantity : 0)}</div>
                     </div>
