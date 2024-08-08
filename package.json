@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "ag-grid-enterprise": "^31.3.1",
     "ag-grid-react": "^31.3.1",
     "bootstrap": "^5.3.3",
