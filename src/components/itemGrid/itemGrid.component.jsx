@@ -26,7 +26,14 @@ const ItemGrid = ({onItemClick, onItemContext, purchase}) => {
     return (
         <div className={styles.gridContainer}>
             {items.map(item => (
-                <div key={item._id} className={`${styles.gridItem} ${purchase.some(p => p._id === item._id) ? styles.gridItemSelected : ''}`} onClick={(event) => handleItemClick(item, event)}
+                <div key={item._id}
+                     className={`
+  ${styles.gridItem} 
+  ${(item.quantity - (purchase.some(p => p._id === item._id) ? purchase.find(p => p._id === item._id).quantity : 0)) === 0 ? styles.itemOut : ''} 
+  ${purchase.some(p => p._id === item._id) ? styles.gridItemSelected : ''}
+`}
+
+                     onClick={(event) => handleItemClick(item, event)}
                      onContextMenu={(event) => handleItemContext(item._id, event)}>
                     <div>{item.name}</div>
                     <div className={styles.alignRight}>
