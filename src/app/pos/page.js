@@ -175,85 +175,79 @@ export default function Pos() {
                     <Toast.Body>{apiMessage.toString()}</Toast.Body>
                 </Toast>
             )}
-            <div className={styles.flexColumn}>
-                <div className={styles.customerInput}>
-                    <Form>
-                        <Form.Group className={styles.flexRow} controlId="exampleForm.ControlInput1">
-                            <Form.Control value={customerInfo.name} onChange={handleCustomerData} type="text"
-                                          name='name' placeholder="Customer Name"/>
-                            <Form.Control value={customerInfo.phone} onChange={handleCustomerData} type="text"
-                                          name='phone' placeholder="Telephone"/>
-                        </Form.Group>
-                    </Form>
+            <div className={styles.flexRow}>
+                <div className={styles.itemGrid}>
+                    <ItemGrid onItemClick={handleItemClick} onItemContext={handleItemContext} purchase={purchase}/>
                 </div>
-                <div className={styles.flexRow}>
-                    <div className={styles.itemGrid}>
-                        <ItemGrid onItemClick={handleItemClick} onItemContext={handleItemContext} purchase={purchase}/>
-                    </div>
-                    <div className={styles.sidebar}>
-                        <div className={styles.invoiceItemsList}>
-                            {purchase.map(item => (
-                                <PurchaseItem key={item._id} item={item} onContextMenu={handleItemContext}/>
-                            ))}
-                        </div>
-                        <div className={styles.discountArea}>
-
-                            <InputGroup className={styles.inputArea}>
-                                <Button variant={activeButton === 'percent' ? "primary" : "outline-secondary"}
-                                        onClick={() => handleDiscountTypeButtonClick('percent')}>%</Button>
-                                <Button variant={activeButton === 'amount' ? "primary" : "outline-secondary"}
-                                        onClick={() => handleDiscountTypeButtonClick('amount')}>#</Button>
-                                <Form.Control
-                                    aria-label="Example text with two button addons"
-                                    value={discount.value}
-                                    onChange={handleDiscountChange}
-                                    type={'number'}
-                                />
-                            </InputGroup>
-                            <span>Discount: </span>
-                        </div>
-                        <div className={styles.invoiceItemsTotalArea}>
-                            <div className={styles.payableText}>Total:</div>
-                            <div
-                                className={styles.payableValue}>{currencyFormatter(purchaseTotal - discount.value, 'Rs. ')}</div>
-                        </div>
-                        <div className={styles.discountArea}>
-                            <InputGroup className={styles.inputArea}>
-                                <Form.Control
-                                    aria-label="Example text with two button addons"
-                                    value={cashTendered}
-                                    onChange={handleCashTendered}
-                                    type={'number'}
-                                />
-                            </InputGroup>
-                            <span>Tendered: </span>
-                        </div>
-                        <div className={styles.invoiceItemsTotalArea}>
-                            <div className={styles.payableText}>Balance:</div>
-                            <div
-                                className={styles.payableValue}>{currencyFormatter(cashTendered - (purchaseTotal - discount.value), 'Rs. ')}</div>
-                        </div>
-
-
-                        <div className={styles.preorderArea}>
-                            <Form.Check
-                                type="checkbox"
-                                id="status-checkbox"
-                                label="Mark as Preorder"
-                                checked={goodsStatus === 'preorder'} // Checked if goodsStatus is 'preorder'
-                                onChange={handleCheckboxChange}
+                <div className={styles.sidebar}>
+                    <div className={styles.invoiceItemsList}>
+                        {purchase.map(item => (
+                            <PurchaseItem
+                                key={item._id}
+                                item={item}
+                                onContextMenu={handleItemContext}
+                                onIncrement={handleItemClick}
+                                onDecrement={handleItemContext}
                             />
-                        </div>
-                        <div className={styles.actionArea}>
-                            <Button variant={"outline-primary"} onClick={() => push_invoice()}>Push Invoice</Button>
-                            <Button variant={"outline-danger"} onClick={() => reset()}>Reset</Button>
-                            <Form.Select onChange={(e) => handleSelect(e.target.value)} size="sm"
-                                         aria-label="Default select example" style={{width: 150}}>
-                                <option value="cash">Cash</option>
-                                <option value="card">Card</option>
-                                <option value="bank transfer">Bank Transfer</option>
-                            </Form.Select>
-                        </div>
+                        ))}
+                    </div>
+                    <div className={styles.discountArea}>
+
+                        <InputGroup className={styles.inputArea}>
+                            <Button variant={activeButton === 'percent' ? "primary" : "outline-secondary"}
+                                    onClick={() => handleDiscountTypeButtonClick('percent')}>%</Button>
+                            <Button variant={activeButton === 'amount' ? "primary" : "outline-secondary"}
+                                    onClick={() => handleDiscountTypeButtonClick('amount')}>#</Button>
+                            <Form.Control
+                                aria-label="Example text with two button addons"
+                                value={discount.value}
+                                onChange={handleDiscountChange}
+                                type={'number'}
+                            />
+                        </InputGroup>
+                        <span>Discount: </span>
+                    </div>
+                    <div className={styles.invoiceItemsTotalArea}>
+                        <div className={styles.payableText}>Total:</div>
+                        <div
+                            className={styles.payableValue}>{currencyFormatter(purchaseTotal - discount.value, 'Rs. ')}</div>
+                    </div>
+                    <div className={styles.discountArea}>
+                        <InputGroup className={styles.inputArea}>
+                            <Form.Control
+                                aria-label="Example text with two button addons"
+                                value={cashTendered}
+                                onChange={handleCashTendered}
+                                type={'number'}
+                            />
+                        </InputGroup>
+                        <span>Tendered: </span>
+                    </div>
+                    <div className={styles.invoiceItemsTotalArea}>
+                        <div className={styles.payableText}>Balance:</div>
+                        <div
+                            className={styles.payableValue}>{currencyFormatter(((cashTendered - (purchaseTotal - discount.value)) >= 0 ? (cashTendered - (purchaseTotal - discount.value)) : 0), 'Rs. ')}</div>
+                    </div>
+
+
+                    <div className={styles.preorderArea}>
+                        <Form.Check
+                            type="checkbox"
+                            id="status-checkbox"
+                            label="Mark as Preorder"
+                            checked={goodsStatus === 'preorder'} // Checked if goodsStatus is 'preorder'
+                            onChange={handleCheckboxChange}
+                        />
+                    </div>
+                    <div className={styles.actionArea}>
+                        <Button variant={"outline-primary"} onClick={() => push_invoice()}>Submit</Button>
+                        <Button variant={"outline-danger"} onClick={() => reset()}>Reset</Button>
+                        <Form.Select onChange={(e) => handleSelect(e.target.value)} size="sm"
+                                     aria-label="Default select example" style={{width: 150}}>
+                            <option value="cash">Cash</option>
+                            <option value="card">Card</option>
+                            <option value="bank transfer">Bank Transfer</option>
+                        </Form.Select>
                     </div>
                 </div>
             </div>
