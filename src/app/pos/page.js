@@ -16,8 +16,9 @@ export default function Pos() {
     const [paymentMethod, setPaymentMethod] = useState('cash')
     const [cashTendered, setCashTendered] = useState(0)
     const [activeButton, setActiveButton] = useState('amount');
-
     const [numericValue, setNumericValue] = useState(0)
+
+    const [isValid, setIsValid] = useState(false)
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
@@ -143,7 +144,7 @@ export default function Pos() {
     }
 
     const push_invoice = useCallback(() => {
-        const fourDigitValue = (numericValue+1).toString().padStart(4, '0'); // Converts to a four-digit string
+        const fourDigitValue = (numericValue + 1).toString().padStart(4, '0'); // Converts to a four-digit string
         const resultString = `INV${fourDigitValue}`; // Append to your desired string
 
         const invoiceData = {
@@ -170,7 +171,7 @@ export default function Pos() {
             if (!success) {
                 throw Error("Could not send email receipt.")
             }
-            setNumericValue(numericValue+1)
+            setNumericValue(numericValue + 1)
             reset()
         }).catch(error => {
             console.log(invoiceData)
@@ -297,7 +298,12 @@ export default function Pos() {
                         />
                     </div>
                     <div className={styles.actionArea}>
-                        <Button variant={"outline-primary"} onClick={() => push_invoice()}>Submit</Button>
+                        <Button
+                            variant={"outline-primary"}
+                            onClick={() => push_invoice()}
+                            disabled={(!((cashTendered - (purchaseTotal - discount.value)) >= 0)) || purchase.length === 0}>
+                            Submit
+                        </Button>
                         <Button variant={"outline-danger"} onClick={() => reset()}>Reset</Button>
                         <Form.Select onChange={(e) => handleSelect(e.target.value)} size="sm"
                                      aria-label="Default select example" style={{width: 150}}>
