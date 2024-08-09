@@ -2,7 +2,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button} from "react-bootstrap";
 import styles from "./page.module.css";
-import ItemGrid from "@/components/itemGrid/itemGrid.component.jsx";
 import {useState} from "react";
 
 export default function Home() {

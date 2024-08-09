@@ -12,8 +12,7 @@ export async function pushItemToAPI(data, endpoint = 'item') {
             throw new Error('Failed to post item!');
         }
 
-        const responseData = await response.json();
-        return responseData;
+        return await response.json();
     } catch (error) {
         throw error;
     }
@@ -21,7 +20,7 @@ export async function pushItemToAPI(data, endpoint = 'item') {
 
 export async function fetchItemsFromAPI(endpoint = 'item', showActiveOnly = false) {
     try {
-        let type = ""
+        let type
         if (showActiveOnly) { type = "active"} else { type = "all" }
         const response = await fetch(`/api/${endpoint}?type=${type}`);
         if (!response.ok) {

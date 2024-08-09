@@ -1,7 +1,6 @@
 // POST an invoice to the database
 import {cancelInvoice, createInvoiceAndDeductInventory, getAllInvoices} from "@/services/server/invoice.service";
 import { NextResponse } from "next/server";
-import {getAllItems} from "@/services/server/item.service";
 
 export async function GET(req, res) {
     if (req.method === 'GET') {

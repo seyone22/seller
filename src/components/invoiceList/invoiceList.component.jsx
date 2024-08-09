@@ -1,10 +1,9 @@
 'use client'
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {fetchInvoicesFromAPI} from "@/services/client/invoice.service"
-import {Button, Toast} from "react-bootstrap";
 import styles from './invoiceList.module.css'
 
 const InvoiceList = ({ key, showToday }) => {

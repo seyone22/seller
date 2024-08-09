@@ -1,5 +1,5 @@
 function currencyFormatter(currency, sign) {
-    if (currency == undefined) {
+    if (currency === undefined) {
         currency = 0
     }
     const sansDec = currency.toFixed(2);

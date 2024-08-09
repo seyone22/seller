@@ -3,10 +3,11 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
-import {fetchItemsFromAPI, pushInvoiceToAPI} from "@/services/client/invoice.service"
+import {pushInvoiceToAPI} from "@/services/client/invoice.service"
 import {Button, InputGroup, Toast} from "react-bootstrap";
 import styles from './invoiceItemsGrid.module.css'
 import Form from 'react-bootstrap/Form';
+import {fetchItemsFromAPI} from "@/services/client/item.service";
 
 const InvoiceItemsGrid = () => {
     const gridRef = useRef();
@@ -204,7 +205,7 @@ const InvoiceItemsGrid = () => {
     );
 
     function currencyFormatter(currency, sign) {
-        if (currency == undefined) {
+        if (currency === undefined) {
             currency = 0
         }
         const sansDec = currency.toFixed(2);

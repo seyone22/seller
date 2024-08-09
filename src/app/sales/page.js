@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import {useEffect, useState} from "react";
 import {fetchStatisticsFromAPI} from "@/services/client/invoice.service";
 import InvoiceList from "@/components/invoiceList/invoiceList.component";
-import {Button, ToggleButton} from "react-bootstrap";
+import {ToggleButton} from "react-bootstrap";
 
 export default function Sales() {
     const [statistics, setStatistics] = useState({});
