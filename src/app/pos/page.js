@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import {useCallback, useEffect, useState} from "react";
 import ItemGrid from "@/components/itemGrid/itemGrid.component";
 import currencyFormatter from "@/utils/formatters";
-import {Button, Form, InputGroup, Toast} from "react-bootstrap";
+import {Button, FloatingLabel, Form, InputGroup, Toast} from "react-bootstrap";
 import {pushInvoiceToAPI, sendReceiptEmail} from "@/services/client/invoice.service";
 import PurchaseItem from "@/components/purchaseItem/purchaseItem.component";
 
@@ -184,6 +184,24 @@ export default function Pos() {
                     <ItemGrid onItemClick={handleItemClick} onItemContext={handleItemContext} purchase={purchase}/>
                 </div>
                 <div className={styles.sidebar}>
+                    <div className={styles.customerInput}>
+                        <Form>
+                            <Form.Group className={styles.flexRow} controlId="exampleForm.ControlInput1">
+                                <FloatingLabel controlId="customerName" label="Customer Name">
+                                    <Form.Control value={customerInfo.name} onChange={handleCustomerData} type="text"
+                                                  name='name' placeholder="Customer Name"/>
+                                </FloatingLabel>
+                                <FloatingLabel controlId="customerPhone" label="Telephone">
+                                    <Form.Control value={customerInfo.phone} onChange={handleCustomerData} type="text"
+                                                  name='phone' placeholder="Telephone"/>
+                                </FloatingLabel>
+                                <FloatingLabel controlId="customerEmail" label="Email">
+                                    <Form.Control value={customerInfo.email} onChange={handleCustomerData} type="text"
+                                                  name='email' placeholder="Email"/>
+                                </FloatingLabel>
+                            </Form.Group>
+                        </Form>
+                    </div>
                     <div className={styles.invoiceItemsList}>
                         {purchase.map(item => (
                             <PurchaseItem

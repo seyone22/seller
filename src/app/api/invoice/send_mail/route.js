@@ -1,19 +1,25 @@
-import { sendEmail } from '@/utils/nodemailer';
+import {sendEmail} from '@/utils/nodemailer';
 import {NextResponse} from "next/server";
 
 export async function POST(req, res) {
-    const { to, subject, text, html } = req.body;
+    const requestData = await req.json();
 
-    if (!to || !subject || !text) {
-        return res.status(400).json({ success: false, error: 'Missing required fields' });
+    console.log(requestData);
+
+
+    if (!requestData.to || !requestData.subject || !requestData.text || !requestData.html) {
+        return NextResponse.json({success: false, error: 'Missing required fields.'}, {status: 400})
     }
 
     try {
-        const success = await sendEmail(to, subject, text, html);
+        const success = await sendEmail(requestData.to, requestData.subject, requestData.text, requestData.html);
         if (success) {
             return NextResponse.json({success: true}, {status: 200})
         } else {
-            return NextResponse.json({success: false, error: "Error sending email, check Nodemailer configuration"}, {status: 500})
+            return NextResponse.json({
+                success: false,
+                error: "Error sending email, check Nodemailer configuration"
+            }, {status: 500})
         }
     } catch (error) {
         return NextResponse.json({success: false, error: error.message}, {status: 500})
