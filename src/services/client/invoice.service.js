@@ -58,3 +58,35 @@ export async function fetchStatisticsFromAPI(period = 'all', endpoint = 'sales/s
         throw error;
     }
 }
+
+
+export const sendReceiptEmail = async (customerEmail) => {
+    try {
+        const emailData = {
+            to: customerEmail,
+            subject: "Purchase at Anime.lk Store",
+            text: 'Thank you for your purchase. Here is your receipt.',
+            html: '<p>Thank you for your purchase. Here is your receipt.</p>',
+        }
+
+        const response = await fetch('/api/invoice/send_mail', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(emailData),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            console.log('Receipt sent successfully');
+            return true;
+        } else {
+            console.error('Failed to send receipt:', result.error);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return false;
+    }
+};

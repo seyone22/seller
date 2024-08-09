@@ -5,7 +5,7 @@ import {useCallback, useEffect, useState} from "react";
 import ItemGrid from "@/components/itemGrid/itemGrid.component";
 import currencyFormatter from "@/utils/formatters";
 import {Button, Form, InputGroup, Toast} from "react-bootstrap";
-import {pushInvoiceToAPI} from "@/services/client/invoice.service";
+import {pushInvoiceToAPI, sendReceiptEmail} from "@/services/client/invoice.service";
 import PurchaseItem from "@/components/purchaseItem/purchaseItem.component";
 
 export default function Pos() {
@@ -129,9 +129,13 @@ export default function Pos() {
             goodsStatus: goodsStatus
         };
 
-        pushInvoiceToAPI(invoiceData).then(e => {
+        pushInvoiceToAPI(invoiceData).then(async e => {
             setShowToast(true)
             setApiMessage("Invoice Posted.")
+            const success = await sendReceiptEmail(invoiceData.customer.email);
+            if (!success) {
+                throw Error("Could not send email receipt.")
+            }
             reset()
         }).catch(error => {
             console.log(invoiceData)
