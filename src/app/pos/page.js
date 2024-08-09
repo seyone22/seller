@@ -139,6 +139,7 @@ export default function Pos() {
         setPurchase([])
         setGoodsStatus('delivered')
         setDiscount({value: 0, type: 'amount'})
+        setCashTendered(0)
     }
 
     const push_invoice = useCallback(() => {
