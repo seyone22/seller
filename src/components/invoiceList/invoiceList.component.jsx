@@ -3,27 +3,28 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
-import {fetchItemsFromAPI, pushInvoiceToAPI} from "@/services/client/invoice.service"
+import {fetchInvoicesFromAPI} from "@/services/client/invoice.service"
 import {Button, Toast} from "react-bootstrap";
 import styles from './invoiceList.module.css'
 
-const InvoiceList = ({ key, showActiveOnly }) => {
+const InvoiceList = ({ key, showToday }) => {
     const gridRef = useRef();
     const [rowData, setRowData] = useState([]);
     const [columnDefs, setColumnDefs] = useState([]);
 
     useEffect(() => {
-        fetchItemsFromAPI('invoice', showActiveOnly).then(data => {
+        fetchInvoicesFromAPI('invoice', showToday ? 'today' : 'all').then(data => {
             setRowData(data);
             setColumnDefs([
                 { field: 'invoiceNumber', flex: 1 },
                 { field: 'customer.name', flex: 1 },
                 { field: 'date', flex: 2 },
                 { field: 'paymentMethod', flex: 1 },
+                { field: 'tendered', flex: 1, valueFormatter: params => currencyFormatter(params.data.tendered, 'Rs.'), type: "rightAligned" },
                 { field: 'total', flex: 1, valueFormatter: params => currencyFormatter(params.data.total, 'Rs.'), type: "rightAligned" },
             ]);
         });
-    }, [key, showActiveOnly]);  // Refetch when key changes
+    }, [key, showToday]);  // Refetch when key changes
 
     return (
         <div className={styles.itemGridContainer}>

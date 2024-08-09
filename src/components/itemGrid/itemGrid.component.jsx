@@ -1,7 +1,7 @@
 'use client'
 import styles from './itemGrid.module.css'
 import {useEffect, useState} from "react";
-import {fetchItemsFromAPI} from "@/services/client/invoice.service";
+import {fetchItemsFromAPI} from "@/services/client/item.service";
 
 const ItemGrid = ({onItemClick, onItemContext, purchase}) => {
     const [items, setItems] = useState([]);

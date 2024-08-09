@@ -1,11 +1,11 @@
-'use client'
+'use client';
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the grid
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
-import {fetchItemsFromAPI, pushInvoiceToAPI} from "@/services/client/invoice.service"
-import {Button, Toast} from "react-bootstrap";
-import styles from './inventoryList.module.css'
+import {fetchItemsFromAPI, updateItem} from "@/services/client/item.service";
+import styles from './inventoryList.module.css';
+import currencyFormatter from "@/utils/formatters";
 
 const InventoryList = ({ key, showActiveOnly }) => {
     const gridRef = useRef();
@@ -20,10 +20,28 @@ const InventoryList = ({ key, showActiveOnly }) => {
                 { field: 'itemCode', flex: 2 },
                 { field: 'name', flex: 3 },
                 { field: 'price', flex: 1, valueFormatter: params => currencyFormatter(params.data.price, 'Rs.'), type: "rightAligned" },
-                { field: 'quantity', flex: 1 },
+                { field: 'quantity', flex: 1, editable: true },
             ]);
         });
-    }, [key, showActiveOnly]);  // Refetch when key changes
+    }, [key, showActiveOnly]);  // Refetch when key or showActiveOnly changes
+
+    const onCellValueChanged = useCallback(async (params) => {
+        try {
+            const updatedItem = {
+                _id: params.data._id,
+                [params.colDef.field]: params.newValue,
+            };
+            // Send the updated data to the server
+            const response = await updateItem(updatedItem, params.data._id);
+            if (!response.success) {
+                console.error("Failed to update item:", response.error);
+            } else {
+                console.log("Item updated successfully!");
+            }
+        } catch (error) {
+            console.error("Error updating item:", error);
+        }
+    }, []);
 
     return (
         <div className={styles.itemGridContainer}>
@@ -32,20 +50,12 @@ const InventoryList = ({ key, showActiveOnly }) => {
                     ref={gridRef}
                     rowData={rowData}
                     columnDefs={columnDefs}
-                    rowSelection={"multiple"}
+                    rowSelection={"single"}
+                    onCellValueChanged={onCellValueChanged}
                 />
             </div>
         </div>
     );
-
-    function currencyFormatter(currency, sign) {
-        if (currency === undefined) {
-            currency = 0;
-        }
-        const sansDec = currency.toFixed(2);
-        const formatted = sansDec.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        return sign + `${formatted}`;
-    }
 };
 
 export default InventoryList;

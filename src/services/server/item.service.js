@@ -48,6 +48,9 @@ export const updateItem = async (itemId, newItemData) => {
             throw new Error(`Item with ID ${itemId} not found`);
         }
         return updatedItem;
+
+        console.log(updatedItem)
+
     } catch (error) {
         throw new Error('Failed to update item');
     }

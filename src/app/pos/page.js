@@ -17,6 +17,8 @@ export default function Pos() {
     const [cashTendered, setCashTendered] = useState(0)
     const [activeButton, setActiveButton] = useState('amount');
 
+    const [numericValue, setNumericValue] = useState(0)
+
     const [customerInfo, setCustomerInfo] = useState({
         id: 'POSCUST',
         name: 'POSCUST',
@@ -35,6 +37,30 @@ export default function Pos() {
             setGoodsStatus('delivered')
         }
     };
+
+
+    useEffect(() => {
+        const fetchLatestInvoiceID = async () => {
+            try {
+                const response = await fetch('/api/invoice/running_invoice_id'); // Adjust the path if necessary
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const result = await response.json();
+                if (result.success) {
+                    setNumericValue(result.data); // Default to 1 if no data
+                } else {
+
+                }
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchLatestInvoiceID();
+    }, []); // Empty dependency array to run only on mount
 
     useEffect(() => {
         if (showToast) {
@@ -113,8 +139,11 @@ export default function Pos() {
     }
 
     const push_invoice = useCallback(() => {
+        const fourDigitValue = (numericValue+1).toString().padStart(4, '0'); // Converts to a four-digit string
+        const resultString = `INV${fourDigitValue}`; // Append to your desired string
+
         const invoiceData = {
-            invoiceNumber: "INV001",
+            invoiceNumber: resultString,
             date: new Date(),
             dueDate: new Date(),
             customer: customerInfo,
@@ -122,6 +151,7 @@ export default function Pos() {
             subtotal: purchaseTotal,
             discount: discount,
             total: purchaseTotal - discount.value,
+            tendered: cashTendered,
             currency: "LKR",
             paymentMethod: paymentMethod,
             paymentInstructions: "Paid at point of sale.",
@@ -136,6 +166,7 @@ export default function Pos() {
             if (!success) {
                 throw Error("Could not send email receipt.")
             }
+            setNumericValue(numericValue+1)
             reset()
         }).catch(error => {
             console.log(invoiceData)

@@ -1,8 +1,7 @@
-export async function fetchItemsFromAPI(endpoint = 'item', showActiveOnly = false) {
+export async function fetchInvoicesFromAPI(endpoint = 'invoice', date = 'today') {
     try {
         let type = ""
-        if (showActiveOnly) { type = "active"} else { type = "all" }
-        const response = await fetch(`/api/${endpoint}?type=${type}`);
+        const response = await fetch(`/api/${endpoint}?date=${date}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch data: ${response.statusText}`);
         }

@@ -162,3 +162,21 @@ export const getSalesStatistics = async () => {
         throw new Error(`Error: ${error}`)
     }
 }
+
+export const findLatestInvoice = async () => {
+    try {
+        await dbConnect();
+
+        const latestInvoice = await Invoice.findOne({})
+            .sort({ createdAt: -1 })
+            .exec()
+
+        if (!latestInvoice) {
+            throw new Error(`No invoices in system!`);
+        }
+
+        return parseInt(latestInvoice.invoiceNumber.replace(/\D/g, ''), 10);
+    } catch (error) {
+        return -1;
+    }
+}

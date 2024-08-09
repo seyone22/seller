@@ -4,12 +4,13 @@ import styles from "./page.module.css";
 import {useEffect, useState} from "react";
 import {fetchStatisticsFromAPI} from "@/services/client/invoice.service";
 import InvoiceList from "@/components/invoiceList/invoiceList.component";
+import {Button, ToggleButton} from "react-bootstrap";
 
 export default function Sales() {
     const [statistics, setStatistics] = useState({});
 
     const [showAddItemModal, setShowAddItemModal] = useState(false);
-    const [showActiveOnly, setShowActiveOnly] = useState(false);
+    const [showToday, setShowToday] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
 
     const handleShowModal = () => setShowAddItemModal(true);
@@ -20,8 +21,7 @@ export default function Sales() {
     };
 
     const handleToggleChange = (e) => {
-        setShowActiveOnly(e.currentTarget.checked);
-        console.log(e.currentTarget.checked);
+        setShowToday(e.currentTarget.checked);
     }
 
     useEffect(() => {
@@ -35,7 +35,16 @@ export default function Sales() {
         <main className={styles.main}>
             <div><h2>Sales Data</h2></div>
 
-            <InvoiceList key={refreshKey} showActiveOnly={showActiveOnly}/>
+            <div className={styles.actionRow}>
+                <div>
+                    <ToggleButton value="1" type="checkbox" id="showToday" checked={showToday}
+                                  onChange={handleToggleChange}>
+                        Show Today's Activity
+                    </ToggleButton>
+                </div>
+            </div>
+
+            <InvoiceList key={refreshKey} showToday={showToday}/>
 
         </main>
     )

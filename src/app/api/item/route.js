@@ -1,4 +1,4 @@
-import { deleteItem, getAllItems, insertItem } from "@/services/server/item.service";
+import { deleteItem, getAllItems, insertItem, updateItem} from "@/services/server/item.service";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
@@ -42,5 +42,32 @@ export async function DELETE(req) {
         return NextResponse.json({ success: true, data: deletedItem }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 404 });
+    }
+}
+
+export async function PUT(req) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+        const updatedItemData = await req.json();
+
+        if (!id) {
+            return NextResponse.json({ success: false, error: 'Item ID is required' }, { status: 400 });
+        }
+
+        if (!updatedItemData) {
+            return NextResponse.json({ success: false, error: 'No data provided for update' }, { status: 400 });
+        }
+
+        // Assuming you have an `updateItem` function in your service
+        const updatedItem = await updateItem(id, updatedItemData);
+
+        if (!updatedItem) {
+            return NextResponse.json({ success: false, error: 'Item not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({ success: true, data: updatedItem }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

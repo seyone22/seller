@@ -1,12 +1,28 @@
 // POST an invoice to the database
 import {cancelInvoice, createInvoiceAndDeductInventory, getAllInvoices} from "@/services/server/invoice.service";
 import { NextResponse } from "next/server";
+import {getAllItems} from "@/services/server/item.service";
 
 export async function GET(req, res) {
     if (req.method === 'GET') {
         try {
+            const { searchParams } = new URL(req.url);
+            const date = searchParams.get('date');
+
             const invoices = await getAllInvoices();
-            return NextResponse.json({ success: true, data: invoices }, { status: 200 });
+
+            if (date === "all") {
+                return NextResponse.json({ success: true, data: invoices }, { status: 200 });
+            } else if (date === "today") {
+                const filtered = invoices.filter(item => {
+                    const itemDate = new Date(item.date).toISOString().split('T')[0];
+                    const today = new Date().toISOString().split('T')[0];
+                    return itemDate === today;
+                });
+                return NextResponse.json({ success: true, data: filtered }, { status: 200 });
+            } else {
+                return NextResponse.json({ success: false, error: 'Invalid type parameter' }, { status: 400 });
+            }
         } catch (error) {
             return NextResponse.json({ success: false, error: error.message }, { status: 500 });
         }
