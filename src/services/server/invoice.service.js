@@ -1,4 +1,5 @@
 // services/invoiceService.js
+import { startOfDay, endOfDay, subDays } from 'date-fns';
 import Invoice from '@/models/invoice';
 import Item from '@/models/item';
 import dbConnect from "@/utils/dbConnect";
@@ -127,41 +128,56 @@ export const updateInvoiceAndInventory = async (invoiceId, updatedInvoiceData) =
     }
 };
 
-export const getSalesStatistics = async () => {
+export const getSalesStatistics = async (range) => {
     try {
         await dbConnect;
+
+        let dateFilter = {};
+
+        // Set the date range filter based on the input range
+        if (range === 'today') {
+            dateFilter = {
+                $gte: startOfDay(new Date()),
+                $lte: endOfDay(new Date())
+            };
+        } else if (range === 'yesterday') {
+            dateFilter = {
+                $gte: startOfDay(subDays(new Date(), 1)),
+                $lte: endOfDay(subDays(new Date(), 1))
+            };
+        }
 
         // Calculate sales statistics
         const salesStats = await Invoice.aggregate([
             {
                 $match: {
                     'goodsStatus': 'delivered',
-                    'status': 'paid'
+                    'status': 'paid',
+                    ...(range !== 'all' && { createdAt: dateFilter }) // Apply date filter only if not 'all'
                 }
-            }, {
+            },
+            {
                 $group: {
-                    _id: 'null',
-                    salesDiscount: {
-                        $sum: '$discount.value'
-                    },
-                    salesGross: {
-                        $sum: '$total'
-                    },
-                    salesNet: {
-                        $sum: '$subtotal'
-                    },
-                    salesCount: {
-                        $count: {}
-                    }
+                    _id: null, // Use null to group all documents together
+                    salesDiscount: { $sum: '$discount.value' },
+                    salesGross: { $sum: '$total' },
+                    salesNet: { $sum: '$subtotal' },
+                    salesCount: { $count: {} }
                 }
             }
         ]);
+
+        // Handle case when no sales data is found
+        if (!salesStats.length) {
+            return { salesGross: 0, salesNet: 0, salesCount: 0, salesDiscount: 0 };
+        }
+
         const { salesGross, salesNet, salesCount, salesDiscount } = salesStats[0];
         return { salesGross, salesNet, salesCount, salesDiscount };
     } catch (error) {
-        throw new Error(`Error: ${error}`)
+        throw new Error(`Error: ${error}`);
     }
-}
+};
 
 export const findLatestInvoice = async () => {
     try {

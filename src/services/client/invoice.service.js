@@ -36,9 +36,9 @@ export async function pushInvoiceToAPI(data,endpoint = 'invoice') {
     }
 }
 
-export async function fetchStatisticsFromAPI(period = 'all', endpoint = 'sales/statistics') {
+export async function fetchStatisticsFromAPI(range = 'all', endpoint = 'sales/statistics') {
     try {
-        const response = await fetch(`/api/${endpoint}`, {
+        const response = await fetch(`/api/${endpoint}?range=${range}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

@@ -7,6 +7,7 @@ import {pushItemToAPI} from "@/services/client/item.service";
 
 const AddItemModal = ({ show, handleClose, onItemAdded }) => {
     const [newItem, setNewItem] = useState({})
+    const [isValid, setIsValid] = useState(true);
 
     const handleAddNewItem = () => {
         console.log(newItem)
@@ -14,6 +15,10 @@ const AddItemModal = ({ show, handleClose, onItemAdded }) => {
             handleClose();
             onItemAdded();
         })
+    };
+
+    const handleItemChange = (e) => {
+        setNewItem({ ...newItem, itemCode: e.target.value });
     };
 
     return (
