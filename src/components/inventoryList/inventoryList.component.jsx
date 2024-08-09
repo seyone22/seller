@@ -18,8 +18,8 @@ const InventoryList = ({ key, showActiveOnly }) => {
             setColumnDefs([
                 { field: '_id', flex: 2 },
                 { field: 'itemCode', flex: 2 },
-                { field: 'name', flex: 3 },
-                { field: 'price', flex: 1, valueFormatter: params => currencyFormatter(params.data.price, 'Rs.'), type: "rightAligned" },
+                { field: 'name', flex: 3 , editable: true },
+                { field: 'price', flex: 1, valueFormatter: params => currencyFormatter(params.data.price, 'Rs.'), type: "rightAligned" , editable: true},
                 { field: 'quantity', flex: 1, editable: true },
             ]);
         });

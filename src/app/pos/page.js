@@ -19,6 +19,9 @@ export default function Pos() {
 
     const [numericValue, setNumericValue] = useState(0)
 
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
+
     const [customerInfo, setCustomerInfo] = useState({
         id: 'POSCUST',
         name: 'POSCUST',
