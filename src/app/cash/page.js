@@ -19,7 +19,7 @@ export default function Cash() {
     return (
         <main className={styles.main}>
             <div>
-                <div><h2>Sales Overview</h2></div>
+                <div><h2>Cash Manager</h2></div>
                 <div className={styles.statRow}>
                     <Card>
                         <div className={styles.statValue}>{currencyFormatter(statistics.salesGross, 'Rs.')}</div>

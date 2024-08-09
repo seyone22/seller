@@ -65,8 +65,8 @@ export default function Home() {
                 <a href={`/inventory`}>
                     <Button className={styles.mainButton} variant={"secondary"}>View Inventory</Button>
                 </a>
-                <a href={`/invoice`}>
-                    <Button className={styles.mainButton} variant={"secondary"}>Invoice Manager</Button>
+                <a href={`/sales`}>
+                    <Button className={styles.mainButton} variant={"secondary"}>Sales</Button>
                 </a>
                 <a href={`/cash`}>
                     <Button className={styles.mainButton} variant={"secondary"}>Cash Manager</Button>

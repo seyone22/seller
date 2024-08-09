@@ -21,7 +21,7 @@ export default function Pos() {
         id: 'POSCUST',
         name: 'POSCUST',
         address: '',
-        email: '',
+        email: 'invoices@anime.lk',
         phone: ''
     })
 
