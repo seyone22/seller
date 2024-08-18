@@ -260,6 +260,7 @@ export default function Pos() {
                                 aria-label="Example text with two button addons"
                                 value={discount.value}
                                 onChange={handleDiscountChange}
+                                min="0"
                                 type={'number'}
                             />
                         </InputGroup>
@@ -275,6 +276,7 @@ export default function Pos() {
                             <Form.Control
                                 aria-label="Example text with two button addons"
                                 value={cashTendered}
+                                min="0"
                                 onChange={handleCashTendered}
                                 type={'number'}
                             />
