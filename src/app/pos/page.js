@@ -204,6 +204,16 @@ export default function Pos() {
         console.log(customerInfo)
     };
 
+    const calculatePayableValue = () => {
+        if (discount.type === 'amount') {
+            return purchaseTotal - discount.value;
+        } else if (discount.type === 'percent') {
+            return purchaseTotal * (100 - discount.value) / 100;
+        } else {
+            return purchaseTotal; // In case there's no discount or another type
+        }
+    };
+
     return (
         <main>
             {showToast && (
@@ -256,7 +266,6 @@ export default function Pos() {
                             <Button variant={activeButton === 'amount' ? "primary" : "outline-secondary"}
                                     onClick={() => handleDiscountTypeButtonClick('amount')}>#</Button>
                             <Form.Control
-                                aria-label="Example text with two button addons"
                                 value={discount.value}
                                 onChange={handleDiscountChange}
                                 min="0"
@@ -268,7 +277,7 @@ export default function Pos() {
                     <div className={styles.invoiceItemsTotalArea}>
                         <div className={styles.payableText}>Total:</div>
                         <div
-                            className={styles.payableValue}>{currencyFormatter(purchaseTotal - discount.value, 'Rs. ')}</div>
+                            className={styles.payableValue}>{currencyFormatter(calculatePayableValue(), 'Rs. ')}</div>
                     </div>
                     <div className={styles.discountArea}>
                         <InputGroup className={styles.inputArea}>
@@ -285,7 +294,7 @@ export default function Pos() {
                     <div className={styles.invoiceItemsTotalArea}>
                         <div className={styles.payableText}>Balance:</div>
                         <div
-                            className={styles.payableValue}>{currencyFormatter(((cashTendered - (purchaseTotal - discount.value)) >= 0 ? (cashTendered - (purchaseTotal - discount.value)) : 0), 'Rs. ')}</div>
+                            className={styles.payableValue}>{currencyFormatter(((cashTendered - calculatePayableValue()) >= 0 ? (cashTendered - calculatePayableValue()) : 0), 'Rs. ')}</div>
                     </div>
 
 
