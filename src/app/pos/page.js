@@ -42,7 +42,6 @@ export default function Pos() {
         }
     };
 
-
     useEffect(() => {
         const fetchLatestInvoiceID = async () => {
             try {
