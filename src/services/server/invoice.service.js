@@ -3,8 +3,13 @@ import { startOfDay, endOfDay, subDays } from 'date-fns';
 import Invoice from '@/models/invoice';
 import Item from '@/models/item';
 import dbConnect from "@/utils/dbConnect";
+import mongoose from "mongoose";
+import {sendEmail} from "@/utils/nodemailer";
 
 export const createInvoiceAndDeductInventory = async (invoiceData) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
         await dbConnect();
 
@@ -17,7 +22,7 @@ export const createInvoiceAndDeductInventory = async (invoiceData) => {
         // Check stock and deduct inventory
         if (invoiceData.goodsStatus !== 'preorder') {
             for (const item of invoiceData.items) {
-                const existingItem = await Item.findById(item._id).exec();
+                const existingItem = await Item.findById(item._id).session(session).exec();
                 if (!existingItem) {
                     throw new Error(`Item with ID ${item._id} not found`);
                 }
@@ -25,16 +30,33 @@ export const createInvoiceAndDeductInventory = async (invoiceData) => {
                     throw new Error(`Not enough stock for item with ID ${item._id}`);
                 }
                 existingItem.quantity -= item.quantity;
-                await existingItem.save();
+                await existingItem.save({ session });
             }
         }
 
         // Create invoice
         const invoice = new Invoice(invoiceData);
-        await invoice.save();
+        await invoice.save({ session });
+
+        // Send Email Invoice
+        const emailSent = await sendEmail(
+            invoiceData.customer.email,
+            "Email Subject",
+            "Successfully Created Invoice!",
+            "<html lang='en-us'></html>"
+        )
+
+        if (!emailSent) {
+            throw new Error("Email not sent");
+        }
+
+        await session.commitTransaction();
+        await session.endSession();
 
         return invoice;
     } catch (error) {
+        await session.abortTransaction();
+        await session.endSession();
         throw new Error(`Failed to create invoice and deduct inventory: ${error.message}`);
     }
 };
