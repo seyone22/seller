@@ -12,7 +12,7 @@ export default function Pos() {
     const [purchase, setPurchase] = useState([]);
     const [goodsStatus, setGoodsStatus] = useState('delivered')
     const [discount, setDiscount] = useState({type: 'amount', value: 0})
-    const [paymentMethod, setPaymentpMethod] = useState('cash')
+    const [paymentMethod, setPaymentMethod] = useState('cash')
     const [activeButton, setActiveButton] = useState('amount');
     const [numericValue, setNumericValue] = useState(0)
 

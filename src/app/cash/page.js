@@ -37,7 +37,7 @@ export default function Cash() {
                 });
             }
         };
-        fetchData();
+        fetchData().then(r => { });
     }, [range]);
 
     return (

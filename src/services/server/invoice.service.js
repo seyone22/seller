@@ -153,6 +153,8 @@ export const getSalesStatistics = async (range) => {
 
         let dateFilter = {};
 
+        console.log(range)
+
         // Set the date range filter based on the input range
         if (range === 'today') {
             dateFilter = {
