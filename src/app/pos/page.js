@@ -10,13 +10,17 @@ import PurchaseItem from "@/components/purchaseItem/purchaseItem.component";
 
 export default function Pos() {
     const [purchase, setPurchase] = useState([]);
-    const [purchaseTotal, setPurchaseTotal] = useState(0)
     const [goodsStatus, setGoodsStatus] = useState('delivered')
     const [discount, setDiscount] = useState({type: 'amount', value: 0})
     const [paymentMethod, setPaymentMethod] = useState('cash')
-    const [cashTendered, setCashTendered] = useState(0)
     const [activeButton, setActiveButton] = useState('amount');
     const [numericValue, setNumericValue] = useState(0)
+
+    const [sidebarStats, setSidebarStats] = useState({
+        subTotal: 0,
+        cashTendered: 0,
+        balance: 0
+    })
 
     const [isValid, setIsValid] = useState(false)
 
@@ -62,7 +66,7 @@ export default function Pos() {
             }
         };
 
-        fetchLatestInvoiceID();
+        fetchLatestInvoiceID().then(r => { });
     }, []); // Empty dependency array to run only on mount
 
     useEffect(() => {
@@ -79,17 +83,22 @@ export default function Pos() {
         const existingItemIndex = purchase.findIndex(item => item._id === clickedItem._id);
 
         if (existingItemIndex !== -1) {
-            // If the item exists, update its quantity
-            const updatedPurchase = purchase.map((item, index) => {
-                if (index === existingItemIndex) {
-                    const newQuantity = item.quantity + 1
-                    const newPrice = item.price * newQuantity
-                    setPurchaseTotal(purchaseTotal + item.price)
-                    return {...item, quantity: newQuantity, total: newPrice};
-                }
-                return item;
-            });
-            setPurchase(updatedPurchase);
+            if (purchase[existingItemIndex].quantity > 0) {
+                // If the item exists, update its quantity
+                const updatedPurchase = purchase.map((item, index) => {
+                    if (index === existingItemIndex) {
+                        const newQuantity = item.quantity + 1
+                        const newPrice = item.price * newQuantity
+                        setSidebarStats((prevStats) => ({
+                            ...prevStats,
+                            subTotal: sidebarStats.subTotal + item.price,
+                        }));
+                        return {...item, quantity: newQuantity, total: newPrice};
+                    }
+                    return item;
+                });
+                setPurchase(updatedPurchase);
+            }
         } else {
             // If the item doesn't exist, add it as a new element
             const newItem = {
@@ -100,7 +109,10 @@ export default function Pos() {
                 total: clickedItem.price,
                 price: clickedItem.price
             };
-            setPurchaseTotal(purchaseTotal + newItem.price)
+            setSidebarStats((prevStats) => ({
+                ...prevStats,
+                subTotal: sidebarStats.subTotal + newItem.price,
+            }));
             setPurchase(prevPurchase => [...prevPurchase, newItem]);
         }
     };
@@ -118,7 +130,10 @@ export default function Pos() {
                 const updatedPurchase = purchase.map((item, index) => {
                     if (index === existingItemIndex) {
                         const newQuantity = item.quantity - 1;
-                        setPurchaseTotal(purchaseTotal - item.price)
+                        setSidebarStats((prevStats) => ({
+                            ...prevStats,
+                            subTotal: sidebarStats.subTotal - item.price,
+                        }));
                         const newPrice = item.price * newQuantity
                         return {...item, quantity: newQuantity, total: newPrice};
                     }
@@ -128,18 +143,24 @@ export default function Pos() {
             } else {
                 // If the quantity is already 0, remove the item from the purchase list
                 const updatedPurchase = purchase.filter(item => item._id !== itemId);
-                setPurchaseTotal(purchaseTotal - currentItem.price)
+                setSidebarStats((prevStats) => ({
+                    ...prevStats,
+                    subTotal: sidebarStats.subTotal - currentItem.price,
+                }));
                 setPurchase(updatedPurchase);
             }
         }
     };
 
     const reset = () => {
-        setPurchaseTotal(0)
+        setSidebarStats((prevStats) => ({
+            ...prevStats,
+            subTotal: 0,
+            cashTendered: 0
+        }));
         setPurchase([])
         setGoodsStatus('delivered')
         setDiscount({value: 0, type: 'amount'})
-        setCashTendered(0)
     }
 
     const push_invoice = useCallback(() => {
@@ -152,10 +173,10 @@ export default function Pos() {
             dueDate: new Date(),
             customer: customerInfo,
             items: purchase,
-            subtotal: purchaseTotal,
+            subtotal: sidebarStats.subTotal,
             discount: discount,
-            total: purchaseTotal - discount.value,
-            tendered: cashTendered,
+            total: sidebarStats.subTotal - discount.value,
+            tendered: sidebarStats.cashTendered,
             currency: "LKR",
             paymentMethod: paymentMethod,
             paymentInstructions: "Paid at point of sale.",
@@ -178,7 +199,7 @@ export default function Pos() {
             setApiMessage(error)
         })
 
-    }, [purchase, purchaseTotal, goodsStatus]);
+    }, [purchase, sidebarStats, goodsStatus]);
 
     const handleDiscountChange = (event) => {
         setDiscount({...discount, value: event.target.value})
@@ -190,7 +211,9 @@ export default function Pos() {
     };
 
     const handleCashTendered = (event) => {
-        setCashTendered(event.target.value)
+        setSidebarStats((prevStats) => ({
+            ...prevStats, cashTendered: event.target.value,
+        }));
     }
 
     const handleSelect = (method) => {
@@ -206,11 +229,11 @@ export default function Pos() {
 
     const calculatePayableValue = () => {
         if (discount.type === 'amount') {
-            return purchaseTotal - discount.value;
+            return sidebarStats.subTotal - discount.value;
         } else if (discount.type === 'percent') {
-            return purchaseTotal * (100 - discount.value) / 100;
+            return sidebarStats.subTotal * (100 - discount.value) / 100;
         } else {
-            return purchaseTotal; // In case there's no discount or another type
+            return sidebarStats.subTotal; // In case there's no discount or another type
         }
     };
 
@@ -255,6 +278,7 @@ export default function Pos() {
                                 onContextMenu={handleItemContext}
                                 onIncrement={handleItemClick}
                                 onDecrement={handleItemContext}
+                                purchase={purchase}
                             />
                         ))}
                     </div>
@@ -283,7 +307,7 @@ export default function Pos() {
                         <InputGroup className={styles.inputArea}>
                             <Form.Control
                                 aria-label="Example text with two button addons"
-                                value={cashTendered}
+                                value={sidebarStats.cashTendered}
                                 min="0"
                                 onChange={handleCashTendered}
                                 type={'number'}
@@ -294,7 +318,7 @@ export default function Pos() {
                     <div className={styles.invoiceItemsTotalArea}>
                         <div className={styles.payableText}>Balance:</div>
                         <div
-                            className={styles.payableValue}>{currencyFormatter(((cashTendered - calculatePayableValue()) >= 0 ? (cashTendered - calculatePayableValue()) : 0), 'Rs. ')}</div>
+                            className={styles.payableValue}>{currencyFormatter(((sidebarStats.cashTendered - calculatePayableValue()) >= 0 ? (sidebarStats.cashTendered - calculatePayableValue()) : 0), 'Rs. ')}</div>
                     </div>
 
 
@@ -311,7 +335,7 @@ export default function Pos() {
                         <Button
                             variant={"outline-primary"}
                             onClick={() => push_invoice()}
-                            disabled={(!((cashTendered - (purchaseTotal - discount.value)) >= 0)) || purchase.length === 0}>
+                            disabled={(!((sidebarStats.cashTendered - (sidebarStats.subTotal - discount.value)) >= 0)) || purchase.length < 0}>
                             Submit
                         </Button>
                         <Button variant={"outline-danger"} onClick={() => reset()}>Reset</Button>
