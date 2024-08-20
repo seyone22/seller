@@ -2,7 +2,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from "./page.module.css";
 import InventoryList from "@/components/inventoryList/inventoryList.component";
-import {Alert, Button, Form, ToggleButton} from "react-bootstrap";
+import {Alert, Button, FloatingLabel, Form, ToggleButton} from "react-bootstrap";
 import AddItemModal from "@/components/modals/addItemModal/addItemModal.component";
 import {useState} from "react";
 
@@ -14,7 +14,7 @@ export default function Inventory() {
     const [authenticated, setAuthenticated] = useState(false);
     const [error, setError] = useState(false);
 
-    const [key, setKey] = useState(0);
+    const [key, setKey] = useState("");
 
     // Handle Actions
     const handleShowModal = () => setShowAddItemModal(true);
@@ -43,6 +43,7 @@ export default function Inventory() {
                 <div>
                     <div>
                         <Form onSubmit={handleSubmit}>
+                            <FloatingLabel controlId="key" label="Key">
                             <Form.Control
                                 className={styles.input}
                                 placeholder="Key"
@@ -51,6 +52,7 @@ export default function Inventory() {
                                 onChange={(e) => setKey(e.target.value)}
                                 required
                             />
+                            </FloatingLabel>
                             <Button type="submit" className={styles.button}>Enter</Button>
                             {error && (
                                 <Alert variant={error}>
