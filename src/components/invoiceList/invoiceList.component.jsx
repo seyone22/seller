@@ -24,7 +24,7 @@ const InvoiceList = ({ key, showToday }) => {
                 { field: 'paymentMethod', flex: 1 },
                 { field: 'tendered', flex: 1, valueFormatter: params => currencyFormatter(params.data.tendered, 'Rs.'), type: "rightAligned" },
                 { field: 'total', flex: 1, valueFormatter: params => currencyFormatter(params.data.total, 'Rs.'), type: "rightAligned" },
-                { field: 'actions', headerName: "Actions", cellRenderer: CustomButtonComp }
+                { field: 'actions', headerName: "Actions", cellRenderer: CustomButtonComp, flex: 2 }
             ]);
         });
     }, [key, showToday]);  // Refetch when key changes
@@ -44,7 +44,12 @@ const InvoiceList = ({ key, showToday }) => {
 };
 
 const CustomButtonComp = props => {
-    return <><Button onClick={ () => sendReceiptEmail() }>Resend Email</Button></>;
+    return <>
+        <Button onClick={ () => sendReceiptEmail(props.data) }>Resend Email</Button>
+        <a href={`/sales/${props.data._id}`}>
+            <Button>View</Button>
+        </a>
+    </>;
 };
 
 export default InvoiceList;

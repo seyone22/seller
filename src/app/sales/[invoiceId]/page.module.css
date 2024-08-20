@@ -1,0 +1,67 @@
+.body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: white;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #230F13;
+    position: relative;
+}
+
+.h1 {
+    color: #fd8103;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    min-width: 600px; /* Ensures a minimum width for scrolling */
+}
+
+.table, .th, .td {
+    border: 1px solid #ddd;
+}
+
+.th, .td {
+    padding: 10px;
+    text-align: left;
+}
+
+.th {
+    background-color: #8A5721;
+}
+
+.footer {
+    margin-top: 20px;
+}
+
+.logo {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 100px; /* Adjust the width as needed */
+}
+
+/* Media query for small screens */
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .table {
+        font-size: 14px; /* Adjust font size for better readability on smaller screens */
+    }
+}

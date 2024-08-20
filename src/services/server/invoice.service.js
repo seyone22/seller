@@ -60,6 +60,10 @@ export const getInvoice = async (invoiceId) => {
     try {
         await dbConnect();
 
+        console.log(
+            invoiceId
+        )
+
         const invoice = await Invoice.findById(invoiceId);
         if (!invoice) {
             throw new Error(`Invoice with ID ${invoiceId} not found`);

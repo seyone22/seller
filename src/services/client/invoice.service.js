@@ -13,6 +13,17 @@ export async function fetchInvoicesFromAPI(endpoint = 'invoice', date = 'today')
     }
 }
 
+export async function fetchInvoiceFromAPI(id = "") {
+    try {
+        const invoices = await fetchInvoicesFromAPI('invoice', 'all');
+
+        return invoices.find(invoice => invoice._id === id);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error;
+    }
+}
+
 export async function pushInvoiceToAPI(data,endpoint = 'invoice') {
     try {
         const response = await fetch(`/api/${endpoint}`, {
