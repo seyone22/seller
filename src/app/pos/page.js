@@ -25,7 +25,7 @@ export default function Pos() {
     const [isValid, setIsValid] = useState(false)
 
     const [error, setError] = useState("")
-    const [loading, setLoading] = useState(false)
+    const [apiActionInProgress, setApiActionInProgress] = useState(false)
 
     const [customerInfo, setCustomerInfo] = useState({
         id: 'POSCUST',
@@ -53,7 +53,6 @@ export default function Pos() {
             } catch (error) {
                 setError(error.message);
             } finally {
-                setLoading(false);
             }
         };
 
@@ -149,9 +148,11 @@ export default function Pos() {
         setPurchase([]);
         setGoodsStatus('delivered');
         setDiscount({ value: 0, type: 'amount' });
+        setApiActionInProgress(false)
     };
 
     const push_invoice = useCallback(() => {
+        setApiActionInProgress(true)
         const fourDigitValue = numericValue.toString().padStart(4, '0');
         const resultString = `INV${fourDigitValue}`;
 
@@ -180,6 +181,7 @@ export default function Pos() {
             console.log(invoiceData);
             setShowToast(true);
             setApiMessage(error.message);
+            setApiActionInProgress(false)
         });
     }, [purchase, sidebarStats, goodsStatus, numericValue]);
 
@@ -221,7 +223,7 @@ export default function Pos() {
     return (
         <main>
             {showToast && (
-                <Toast className={styles.toast}>
+                <Toast className={styles.toast} bg={apiMessage.toString().includes('Failed') ? 'danger' : 'success'}>
                     <Toast.Header>
                         <strong className="mr-auto">Note:</strong>
                     </Toast.Header>
@@ -230,7 +232,7 @@ export default function Pos() {
             )}
             <div className={styles.flexRow}>
                 <div className={styles.itemGrid}>
-                    <ItemGrid onItemClick={handleItemClick} onItemContext={handleItemContext} purchase={purchase}/>
+                    <ItemGrid key={showToast} onItemClick={handleItemClick} onItemContext={handleItemContext} purchase={purchase}/>
                 </div>
                 <div className={styles.sidebar}>
                     <div className={styles.customerInput}>
@@ -316,8 +318,8 @@ export default function Pos() {
                         <Button
                             variant={"outline-primary"}
                             onClick={() => push_invoice()}
-                            disabled={!((sidebarStats.cashTendered - calculatePayableValue()) >= 0) || purchase.length === 0}>
-                            Submit
+                            disabled={!((sidebarStats.cashTendered - calculatePayableValue()) >= 0) || purchase.length === 0 || apiActionInProgress}>
+                            {!apiActionInProgress ? "Submit" : "Submitting..."}
                         </Button>
                         <Button variant={"outline-danger"} onClick={() => reset()}>Reset</Button>
                         <Form.Select onChange={(e) => handleSelect(e.target.value)} size="sm"
