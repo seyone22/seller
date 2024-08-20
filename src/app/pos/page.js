@@ -316,7 +316,7 @@ export default function Pos() {
                         <Button
                             variant={"outline-primary"}
                             onClick={() => push_invoice()}
-                            disabled={(!((sidebarStats.cashTendered - (sidebarStats.subTotal - discount.value)) >= 0)) || purchase.length < 0}>
+                            disabled={!((sidebarStats.cashTendered - calculatePayableValue()) >= 0) || purchase.length === 0}>
                             Submit
                         </Button>
                         <Button variant={"outline-danger"} onClick={() => reset()}>Reset</Button>
