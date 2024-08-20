@@ -72,7 +72,13 @@ const AddItemModal = ({ show, handleClose, onItemAdded }) => {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>Close</Button>
-                <Button variant="primary" onClick={handleAddNewItem}>Add Item</Button>
+                <Button
+                    variant="primary"
+                    onClick={handleAddNewItem}
+                    disabled={!newItem.itemCode || !newItem.name || !newItem.price || !newItem.quantity}
+                >
+                    Add Item
+                </Button>
             </Modal.Footer>
         </Modal>
     );
