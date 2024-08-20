@@ -32,14 +32,14 @@ export default function Sales() {
     }, []);
 
     return (
-        <main className={styles.main}>
+        <main>
             <div><h2>Sales Data</h2></div>
 
             <div className={styles.actionRow}>
                 <div>
                     <ToggleButton value="1" type="checkbox" id="showToday" checked={showToday}
                                   onChange={handleToggleChange}>
-                        Show Today's Activity
+                        Show Today&apos;s Activity
                     </ToggleButton>
                 </div>
             </div>
