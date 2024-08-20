@@ -1,5 +1,4 @@
 // services/invoiceService.js
-import { startOfDay, endOfDay, subDays } from 'date-fns';
 import Invoice from '@/models/invoice';
 import Item from '@/models/item';
 import dbConnect from "@/utils/dbConnect";
@@ -30,14 +29,13 @@ export const createInvoiceAndDeductInventory = async (invoiceData) => {
                     throw new Error(`Not enough stock for item with ID ${item._id}`);
                 }
                 existingItem.quantity -= item.quantity;
-                await existingItem.save({ session });
+                await existingItem.save({session});
             }
         }
 
         // Create invoice
         const invoice = new Invoice(invoiceData);
-        await invoice.save({ session });
-
+        await invoice.save({session});
 
 
         // Send Email Invoice
@@ -150,62 +148,53 @@ export const updateInvoiceAndInventory = async (invoiceId, updatedInvoiceData) =
 export const getSalesStatistics = async (range) => {
     try {
         await dbConnect;
+        let filteredInvoices = [];
 
-        let dateFilter = {};
+        // Fetch all invoices
+        const invoices = await getAllInvoices(); // Assuming getAllInvoices is an async function
 
-        console.log(range)
+        // Get today's and yesterday's date in UTC
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]; // Subtract 1 day in milliseconds
 
-        // Set the date range filter based on the input range
-        if (range === 'today') {
-            dateFilter = {
-                $gte: startOfDay(new Date()),
-                $lte: endOfDay(new Date())
-            };
-        } else if (range === 'yesterday') {
-            dateFilter = {
-                $gte: startOfDay(subDays(new Date(), 1)),
-                $lte: endOfDay(subDays(new Date(), 1))
-            };
+        // Filter based on the range
+        if (range === "today") {
+            filteredInvoices = invoices.filter(item => {
+                const itemDate = new Date(item.date).toISOString().split('T')[0];
+                return itemDate === today;
+            });
+        } else if (range === "yesterday") {
+            filteredInvoices = invoices.filter(item => {
+                const itemDate = new Date(item.date).toISOString().split('T')[0];
+                return itemDate === yesterday;
+            });
+        } else {
+            // If range is 'all' or any other value, use all invoices
+            filteredInvoices = invoices;
         }
 
         // Calculate sales statistics
-        const salesStats = await Invoice.aggregate([
-            {
-                $match: {
-                    'goodsStatus': 'delivered',
-                    'status': 'paid',
-                    ...(range !== 'all' && { createdAt: dateFilter }) // Apply date filter only if not 'all'
-                }
-            },
-            {
-                $group: {
-                    _id: null, // Use null to group all documents together
-                    salesDiscount: { $sum: '$discount.value' },
-                    salesGross: { $sum: '$total' },
-                    salesNet: { $sum: '$subtotal' },
-                    salesCount: { $count: {} }
-                }
-            }
-        ]);
+        const salesStats = filteredInvoices.reduce((acc, invoice) => {
+            acc.salesDiscount += invoice.discount.value || 0;
+            acc.salesGross += invoice.total || 0;
+            acc.salesNet += invoice.subtotal || 0;
+            acc.salesCount += 1;
+            return acc;
+        }, { salesDiscount: 0, salesGross: 0, salesNet: 0, salesCount: 0 });
 
-        // Handle case when no sales data is found
-        if (!salesStats.length) {
-            return { salesGross: 0, salesNet: 0, salesCount: 0, salesDiscount: 0 };
-        }
-
-        const { salesGross, salesNet, salesCount, salesDiscount } = salesStats[0];
-        return { salesGross, salesNet, salesCount, salesDiscount };
+        return salesStats;
     } catch (error) {
         throw new Error(`Error: ${error}`);
     }
 };
+
 
 export const findLatestInvoice = async () => {
     try {
         await dbConnect();
 
         const latestInvoice = await Invoice.findOne({})
-            .sort({ createdAt: -1 })
+            .sort({createdAt: -1})
             .exec()
 
         if (!latestInvoice) {
