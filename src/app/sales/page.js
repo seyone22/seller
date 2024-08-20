@@ -7,14 +7,8 @@ import InvoiceList from "@/components/invoiceList/invoiceList.component";
 import {ToggleButton} from "react-bootstrap";
 
 export default function Sales() {
-    const [statistics, setStatistics] = useState({});
-
-    const [showAddItemModal, setShowAddItemModal] = useState(false);
     const [showToday, setShowToday] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
-
-    const handleShowModal = () => setShowAddItemModal(true);
-    const handleCloseModal = () => setShowAddItemModal(false);
 
     const handleItemAdded = () => {
         setRefreshKey(oldKey => oldKey + 1);
@@ -23,13 +17,6 @@ export default function Sales() {
     const handleToggleChange = (e) => {
         setShowToday(e.currentTarget.checked);
     }
-
-    useEffect(() => {
-        fetchStatisticsFromAPI().then(data => {
-            console.log(data);
-            setStatistics(data)
-        });
-    }, []);
 
     return (
         <main>
@@ -45,7 +32,6 @@ export default function Sales() {
             </div>
 
             <InvoiceList key={refreshKey} showToday={showToday}/>
-
         </main>
     )
 }

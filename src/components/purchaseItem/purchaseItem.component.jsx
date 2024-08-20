@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
-import currencyFormatter from "@/utils/formatters";
+import { currencyFormatter } from "@/utils/formatters";
 import styles from "./purchaseItem.module.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button} from "react-bootstrap";

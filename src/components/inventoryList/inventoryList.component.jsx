@@ -5,7 +5,7 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {fetchItemsFromAPI, updateItem} from "@/services/client/item.service";
 import styles from './inventoryList.module.css';
-import currencyFormatter from "@/utils/formatters";
+import { currencyFormatter } from "@/utils/formatters";
 
 const InventoryList = ({ key, showActiveOnly }) => {
     const gridRef = useRef();

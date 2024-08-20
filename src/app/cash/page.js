@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from "./page.module.css";
 import {useEffect, useState} from "react";
 import {fetchStatisticsFromAPI} from "@/services/client/invoice.service";
-import currencyFormatter from "@/utils/formatters";
+import { currencyFormatter } from "@/utils/formatters";
 import Card from "@/components/card/card.component";
 import {Button, ButtonGroup} from "react-bootstrap";
 

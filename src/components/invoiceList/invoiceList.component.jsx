@@ -5,6 +5,7 @@ import {useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {fetchInvoicesFromAPI} from "@/services/client/invoice.service"
 import styles from './invoiceList.module.css'
+import {currencyFormatter, dateFormatter} from "@/utils/formatters";
 
 const InvoiceList = ({ key, showToday }) => {
     const gridRef = useRef();
@@ -17,7 +18,7 @@ const InvoiceList = ({ key, showToday }) => {
             setColumnDefs([
                 { field: 'invoiceNumber', flex: 1 },
                 { field: 'customer.name', flex: 1 },
-                { field: 'date', flex: 2 },
+                { field: 'date', flex: 2, valueFormatter: params => dateFormatter(params.data.date) },
                 { field: 'paymentMethod', flex: 1 },
                 { field: 'tendered', flex: 1, valueFormatter: params => currencyFormatter(params.data.tendered, 'Rs.'), type: "rightAligned" },
                 { field: 'total', flex: 1, valueFormatter: params => currencyFormatter(params.data.total, 'Rs.'), type: "rightAligned" },
@@ -37,15 +38,6 @@ const InvoiceList = ({ key, showToday }) => {
             </div>
         </div>
     );
-
-    function currencyFormatter(currency, sign) {
-        if (currency === undefined) {
-            currency = 0;
-        }
-        const sansDec = currency.toFixed(2);
-        const formatted = sansDec.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        return sign + `${formatted}`;
-    }
 };
 
 export default InvoiceList;
