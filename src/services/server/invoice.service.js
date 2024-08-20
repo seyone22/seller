@@ -153,9 +153,11 @@ export const getSalesStatistics = async (range) => {
         // Fetch all invoices
         const invoices = await getAllInvoices(); // Assuming getAllInvoices is an async function
 
-        // Get today's and yesterday's date in UTC
-        const today = new Date().toISOString().split('T')[0];
-        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0]; // Subtract 1 day in milliseconds
+        // Get today's and yesterday's date in GMT+530
+        const today = new Date(Date.now() + 19800000).toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000 + 19800000).toISOString().split('T')[0]; // Subtract 1 day in milliseconds
+
+        console.log(today)
 
         // Filter based on the range
         if (range === "today") {

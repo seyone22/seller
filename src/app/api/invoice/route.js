@@ -15,7 +15,7 @@ export async function GET(req, res) {
             } else if (date === "today") {
                 const filtered = invoices.filter(item => {
                     const itemDate = new Date(item.date).toISOString().split('T')[0];
-                    const today = new Date().toISOString().split('T')[0];
+                    const today = new Date(Date.now() + 19800000).toISOString().split('T')[0];
                     return itemDate === today;
                 });
                 return NextResponse.json({ success: true, data: filtered }, { status: 200 });
