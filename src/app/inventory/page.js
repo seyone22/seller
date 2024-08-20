@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from "./page.module.css";
 import InventoryList from "@/components/inventoryList/inventoryList.component";
 import {Button, ToggleButton} from "react-bootstrap";
-import AddItemModal from "@/components/modals/adddItemModal/addItemModal.component";
+import AddItemModal from "@/components/modals/addItemModal/addItemModal.component";
 import {useState} from "react";
 
 export default function Inventory() {

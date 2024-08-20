@@ -5,6 +5,7 @@ const itemSchema = new Schema({
     _id: { type: Schema.Types.ObjectId, auto: true, },
     name: { type: String },
     description: { type: String },
+    itemCode: { type: String, required: true },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
     active: { type: Boolean, default: false },

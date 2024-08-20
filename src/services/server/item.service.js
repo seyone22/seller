@@ -57,6 +57,8 @@ export const insertItem = async (itemData) => {
     try {
         await dbConnect();
 
+        console.log(itemData)
+
         const newItem = new Item(itemData);
         return await newItem.save();
     } catch (error) {
