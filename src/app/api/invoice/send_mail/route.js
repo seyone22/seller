@@ -4,12 +4,12 @@ import {NextResponse} from "next/server";
 export async function POST(req, res) {
     const requestData = await req.json();
 
-    if (!requestData.invoiceData) {
+    if (!requestData) {
         return NextResponse.json({success: false, error: 'Missing required fields.'}, {status: 400})
     }
 
     try {
-        const success = await sendEmail(requestData.invoiceData);
+        const success = await sendEmail(requestData);
         if (success) {
             return NextResponse.json({success: true}, {status: 200})
         } else {

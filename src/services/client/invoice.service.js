@@ -77,6 +77,8 @@ export const sendReceiptEmail = async (invoiceData) => {
             console.error('Failed to send receipt:', result.error);
             return false;
         }
+
+
     } catch (error) {
         console.error('Error:', error);
         return false;

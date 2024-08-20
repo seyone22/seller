@@ -3,9 +3,11 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {useEffect, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
-import {fetchInvoicesFromAPI} from "@/services/client/invoice.service"
+import {fetchInvoicesFromAPI, sendReceiptEmail} from "@/services/client/invoice.service"
 import styles from './invoiceList.module.css'
 import {currencyFormatter, dateFormatter} from "@/utils/formatters";
+import {Button} from "react-bootstrap";
+import {log} from "next/dist/server/typescript/utils";
 
 const InvoiceList = ({ key, showToday }) => {
     const gridRef = useRef();
@@ -22,6 +24,7 @@ const InvoiceList = ({ key, showToday }) => {
                 { field: 'paymentMethod', flex: 1 },
                 { field: 'tendered', flex: 1, valueFormatter: params => currencyFormatter(params.data.tendered, 'Rs.'), type: "rightAligned" },
                 { field: 'total', flex: 1, valueFormatter: params => currencyFormatter(params.data.total, 'Rs.'), type: "rightAligned" },
+                { field: 'actions', headerName: "Actions", cellRenderer: CustomButtonComp }
             ]);
         });
     }, [key, showToday]);  // Refetch when key changes
@@ -38,6 +41,10 @@ const InvoiceList = ({ key, showToday }) => {
             </div>
         </div>
     );
+};
+
+const CustomButtonComp = props => {
+    return <><Button onClick={ () => sendReceiptEmail() }>Resend Email</Button></>;
 };
 
 export default InvoiceList;

@@ -10,6 +10,8 @@ export default function Sales() {
     const [showToday, setShowToday] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
 
+    const [actionExecuted, setActionExecuted] = useState({true: false, type: ""});
+
     const handleItemAdded = () => {
         setRefreshKey(oldKey => oldKey + 1);
     };
@@ -31,7 +33,7 @@ export default function Sales() {
                 </div>
             </div>
 
-            <InvoiceList key={refreshKey} showToday={showToday}/>
+            <InvoiceList key={refreshKey} actionExecuted={actionExecuted} showToday={showToday}/>
         </main>
     )
 }
