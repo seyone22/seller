@@ -59,21 +59,14 @@ export async function fetchStatisticsFromAPI(range = 'all', endpoint = 'sales/st
 }
 
 
-export const sendReceiptEmail = async (customerEmail) => {
+export const sendReceiptEmail = async (invoiceData) => {
     try {
-        const emailData = {
-            to: customerEmail,
-            subject: "Purchase at Anime.lk Store",
-            text: 'Thank you for your purchase. Here is your receipt.',
-            html: '<p>Thank you for your purchase. Here is your receipt.</p>',
-        }
-
         const response = await fetch('/api/invoice/send_mail', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(emailData),
+            body: JSON.stringify(invoiceData),
         });
 
         const result = await response.json();

@@ -15,6 +15,7 @@ const invoiceSchema = new Schema({
     items: [{
         _id: { type: Schema.Types.ObjectId, auto: true, },
         name: { type: String, required: true },
+        itemCode: { type: String, required: false },
         description: { type: String },
         price: { type: Number, required: true },
         quantity: { type: Number, required: true },

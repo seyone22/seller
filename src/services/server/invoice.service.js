@@ -38,13 +38,10 @@ export const createInvoiceAndDeductInventory = async (invoiceData) => {
         const invoice = new Invoice(invoiceData);
         await invoice.save({ session });
 
+
+
         // Send Email Invoice
-        const emailSent = await sendEmail(
-            invoiceData.customer.email,
-            "Email Subject",
-            "Successfully Created Invoice!",
-            "<html lang='en-us'></html>"
-        )
+        const emailSent = await sendEmail(invoiceData)
 
         if (!emailSent) {
             throw new Error("Email not sent");

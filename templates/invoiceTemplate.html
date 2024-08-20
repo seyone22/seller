@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<title>Anime.lk Merch Reciept</title>
+	<style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: white;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #230F13;
+            position: relative;
+        }
+
+        h1 {
+            color: #fd8103;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            min-width: 600px; /* Ensures a minimum width for scrolling */
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #8A5721;
+        }
+
+        .footer {
+            margin-top: 20px;
+        }
+
+        .logo {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 100px; /* Adjust the width as needed */
+        }
+
+        /* Media query for small screens */
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            table {
+                font-size: 14px; /* Adjust font size for better readability on smaller screens */
+            }
+        }
+	</style>
+</head>
+<body>
+<div class="container">
+	<h1>Your Awesome Anime Merch Reciept</h1>
+	<p>Hi {{customerName}},</p>
+	<p>Thank you for shopping with us at The Anime.lk Shop! We're thrilled you found some amazing anime merch to add to
+		your collection. Below are the details of your purchase:</p>
+
+	<h3>Receipt Details:</h3>
+	<ul>
+		<li><strong>Receipt Number:</strong> {{recieptId}}</li>
+		<li><strong>Date of Purchase:</strong> {{purchaseDate}}</li>
+		<li><strong>Phone Number:</strong> {{customerTelephone}}</li>
+	</ul>
+
+	<h3>Your Loot:</h3>
+	<div class="table-responsive">
+		<table>
+			<thead>
+			<tr>
+				<th>Item Code</th>
+				<th>Quantity</th>
+				<th>Unit Price</th>
+				<th>Total</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{itemsTable}}
+
+			<tr>
+				<td colspan="3"><strong>Subtotal</strong></td>
+				<td>{{subtotal}}</td>
+			</tr>
+			<tr>
+				<td colspan="3"><strong>Discount</strong></td>
+				<td>-{{discount}}</td>
+			</tr>
+			<tr>
+				<td colspan="3"><strong>Total Paid</strong></td>
+				<td>{{total}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h3>Payment Method:</h3>
+	<p>{{paymentMethod}}</p>
+
+	<p><em>Please note: All sales are final.</em></p>
+
+	<div class="footer">
+		<p>We hope you enjoy your new merch! If you have any questions or just want to chat about anime, feel free to
+			reach out to us at <a href='mailto:info@anime.lk'>info@anime.lk</a></p>
+		<p><strong>Stay awesome, and happy watching!</strong></p>
+		<p>Best regards,<br><strong>The Anime.lk Shop Team</strong></p>
+	</div>
+
+	<!-- Logo at the bottom right -->
+	<img alt="Anime.lk Shop Logo" class="logo" src="https://iili.io/dMF0cYb.md.png">
+</div>
+</body>
+</html>

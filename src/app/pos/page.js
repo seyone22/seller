@@ -175,10 +175,6 @@ export default function Pos() {
         pushInvoiceToAPI(invoiceData).then(async e => {
             setShowToast(true);
             setApiMessage("Invoice Posted.");
-            const success = await sendReceiptEmail(invoiceData.customer.email);
-            if (!success) {
-                throw new Error("Could not send email receipt.");
-            }
             reset();
         }).catch(error => {
             console.log(invoiceData);
@@ -207,9 +203,10 @@ export default function Pos() {
     };
 
     const handleCustomerData = (event) => {
-        setCustomerInfo(prevInfo => ({
+        const { name, value } = event.target;
+        setCustomerInfo((prevInfo) => ({
             ...prevInfo,
-            [event.target.name]: event.target.value
+            [name]: value
         }));
     };
 
