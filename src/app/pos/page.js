@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from "./page.module.css";
 import {useCallback, useEffect, useState} from "react";
 import ItemGrid from "@/components/itemGrid/itemGrid.component";
-import currencyFormatter from "@/utils/formatters";
+import { currencyFormatter } from "@/utils/formatters";
 import {Button, FloatingLabel, Form, InputGroup, Toast} from "react-bootstrap";
 import {pushInvoiceToAPI, sendReceiptEmail} from "@/services/client/invoice.service";
 import PurchaseItem from "@/components/purchaseItem/purchaseItem.component";
@@ -12,7 +12,7 @@ export default function Pos() {
     const [purchase, setPurchase] = useState([]);
     const [goodsStatus, setGoodsStatus] = useState('delivered')
     const [discount, setDiscount] = useState({type: 'amount', value: 0})
-    const [paymentMethod, setPaymentMethod] = useState('cash')
+    const [paymentMethod, setPaymentpMethod] = useState('cash')
     const [activeButton, setActiveButton] = useState('amount');
     const [numericValue, setNumericValue] = useState(0)
 
@@ -181,7 +181,7 @@ export default function Pos() {
             setShowToast(true);
             setApiMessage(error.message);
         });
-    }, [purchase, sidebarStats.subTotal, goodsStatus, numericValue]);
+    }, [purchase, sidebarStats, goodsStatus, numericValue]);
 
     const handleDiscountChange = (event) => {
         setDiscount({...discount, value: event.target.value})
