@@ -33,7 +33,7 @@ export const sendEmail = async (invoiceData) => {
 
         template = template.replace('{{recieptId}}', invoiceData.invoiceNumber)
         template = template.replace('{{purchaseDate}}', formattedDate)
-        template = template.replace('{{customerTelephone}}', invoiceData.customer?.telephone || "");
+        template = template.replace('{{customerTelephone}}', invoiceData.customer.telephone);
 
         // Item Table Data
         const itemsTable = invoiceData.items.map(item => `
