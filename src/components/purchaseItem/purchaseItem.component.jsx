@@ -7,21 +7,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Button} from "react-bootstrap";
 
 const PurchaseItem = ({item, onContextMenu, onIncrement, onDecrement, purchase}) => {
-    const [availableQuantity, setAvailableQuantity] = useState(0);
-
-    useEffect(() => {
-        const purchasedItem = purchase.find(i => i._id === item._id);
-        const available = purchasedItem ? item.quantity - purchasedItem.quantity : item.quantity;
-        setAvailableQuantity(available);
-    }, [purchase, item]);
 
     const handleItemClick = (i, event) => {
         event.preventDefault();
-        console.log(availableQuantity)
-        if (availableQuantity > 0) {
+
+        if (item.quantity < item.availableQuantity) {
             onIncrement(i);
         }
-    }
+    };
 
     const handleItemContext = (itemId, event) => {
         event.preventDefault();

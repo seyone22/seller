@@ -8,6 +8,7 @@ const itemSchema = new Schema({
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
     active: { type: Boolean, default: false },
+    availableQuantity: { type: Number, required: false, default: 0 },
 });
 
 const Item = models.Item || model('Item', itemSchema);

@@ -38,26 +38,17 @@ export default function Pos() {
     const [apiMessage, setApiMessage] = useState(false);
     const [showToast, setShowToast] = useState(false);
 
-    const handleCheckboxChange = (event) => {
-        if (goodsStatus === 'delivered') {
-            setGoodsStatus('preorder')
-        } else if (goodsStatus === 'preorder') {
-            setGoodsStatus('delivered')
-        }
+    const handleCheckboxChange = () => {
+        setGoodsStatus(prevStatus => prevStatus === 'delivered' ? 'preorder' : 'delivered');
     };
 
     useEffect(() => {
         const fetchLatestInvoiceID = async () => {
             try {
-                const response = await fetch('/api/invoice/running_invoice_id'); // Adjust the path if necessary
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+                const response = await fetch('/api/invoice/running_invoice_id');
                 const result = await response.json();
                 if (result.success) {
-                    setNumericValue(result.data); // Default to 1 if no data
-                } else {
-
+                    setNumericValue(result.data);
                 }
             } catch (error) {
                 setError(error.message);
@@ -67,7 +58,7 @@ export default function Pos() {
         };
 
         fetchLatestInvoiceID().then(r => { });
-    }, []); // Empty dependency array to run only on mount
+    }, []); // This ensures numericValue is always up-to-date
 
     useEffect(() => {
         if (showToast) {
@@ -107,7 +98,8 @@ export default function Pos() {
                 name: clickedItem.name,
                 quantity: 1,
                 total: clickedItem.price,
-                price: clickedItem.price
+                price: clickedItem.price,
+                availableQuantity: clickedItem.quantity
             };
             setSidebarStats((prevStats) => ({
                 ...prevStats,
@@ -153,19 +145,15 @@ export default function Pos() {
     };
 
     const reset = () => {
-        setSidebarStats((prevStats) => ({
-            ...prevStats,
-            subTotal: 0,
-            cashTendered: 0
-        }));
-        setPurchase([])
-        setGoodsStatus('delivered')
-        setDiscount({value: 0, type: 'amount'})
-    }
+        setSidebarStats({ subTotal: 0, cashTendered: 0, balance: 0 });
+        setPurchase([]);
+        setGoodsStatus('delivered');
+        setDiscount({ value: 0, type: 'amount' });
+    };
 
     const push_invoice = useCallback(() => {
-        const fourDigitValue = (numericValue + 1).toString().padStart(4, '0'); // Converts to a four-digit string
-        const resultString = `INV${fourDigitValue}`; // Append to your desired string
+        const fourDigitValue = numericValue.toString().padStart(4, '0');
+        const resultString = `INV${fourDigitValue}`;
 
         const invoiceData = {
             invoiceNumber: resultString,
@@ -185,21 +173,19 @@ export default function Pos() {
         };
 
         pushInvoiceToAPI(invoiceData).then(async e => {
-            setShowToast(true)
-            setApiMessage("Invoice Posted.")
+            setShowToast(true);
+            setApiMessage("Invoice Posted.");
             const success = await sendReceiptEmail(invoiceData.customer.email);
             if (!success) {
-                throw Error("Could not send email receipt.")
+                throw new Error("Could not send email receipt.");
             }
-            setNumericValue(numericValue + 1)
-            reset()
+            reset();
         }).catch(error => {
-            console.log(invoiceData)
-            setShowToast(true)
-            setApiMessage(error)
-        })
-
-    }, [purchase, sidebarStats, goodsStatus]);
+            console.log(invoiceData);
+            setShowToast(true);
+            setApiMessage(error.message);
+        });
+    }, [purchase, sidebarStats.subTotal, goodsStatus, numericValue]);
 
     const handleDiscountChange = (event) => {
         setDiscount({...discount, value: event.target.value})
@@ -221,20 +207,18 @@ export default function Pos() {
     };
 
     const handleCustomerData = (event) => {
-        const {name, value} = event.target;
-        setCustomerInfo({...customerInfo, [name]: value});
-
-        console.log(customerInfo)
+        setCustomerInfo(prevInfo => ({
+            ...prevInfo,
+            [event.target.name]: event.target.value
+        }));
     };
 
     const calculatePayableValue = () => {
-        if (discount.type === 'amount') {
-            return sidebarStats.subTotal - discount.value;
-        } else if (discount.type === 'percent') {
-            return sidebarStats.subTotal * (100 - discount.value) / 100;
-        } else {
-            return sidebarStats.subTotal; // In case there's no discount or another type
-        }
+        let discountedValue = discount.type === 'percent'
+            ? sidebarStats.subTotal * (1 - discount.value / 100)
+            : sidebarStats.subTotal - discount.value;
+
+        return Math.max(discountedValue, 0); // Ensure it doesn't go below 0
     };
 
     return (
