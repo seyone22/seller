@@ -48,16 +48,16 @@ export default function Pos() {
                 const response = await fetch('/api/invoice/running_invoice_id');
                 const result = await response.json();
                 if (result.success) {
+                    // Use the Hex value directly
                     setNumericValue(result.data);
                 }
             } catch (error) {
                 setError(error.message);
-            } finally {
             }
         };
-
-        fetchLatestInvoiceID().then(r => { });
-    }, []); // This ensures numericValue is always up-to-date
+    
+        fetchLatestInvoiceID();
+    }, []);
 
     useEffect(() => {
         if (showToast) {
@@ -153,8 +153,11 @@ export default function Pos() {
 
     const push_invoice = useCallback(() => {
         setApiActionInProgress(true)
-        const fourDigitValue = numericValue.toString().padStart(4, '0');
-        const resultString = `INV${fourDigitValue}`;
+        // Generate a random number and convert it to a Hex string
+         const randomValue = Math.floor(Math.random() * 0xFFFFF); // Random value within a reasonable range
+        const hexValue = randomValue.toString(16).toUpperCase().padStart(4, '0'); // 4 characters long, padded with leading zeros
+        
+        const resultString = `INV-${hexValue}`;
 
         const invoiceData = {
             invoiceNumber: resultString,
